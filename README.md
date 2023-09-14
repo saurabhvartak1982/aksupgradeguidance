@@ -26,25 +26,37 @@ More information on the Node OS security and kernel updates here - https://learn
 
 ## 3. Ensuring application availability during upgrades
 ### a. Kubernetes/AKS-based measures
-**1. Node Surge**
+**1. Node Surge** <br />
 Node Surge setting indicates the buffer/extra Nodes that are created during the upgrades - at the NodePool level. These extra Node(s) help in minimizing disruptions during the upgrades as well as to tune the upgrade speed. < br />
 Please refer to the section **Customize node surge upgrade** for guidance on this configuration here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#customize-node-surge-upgrade <br /><br />
 
-**2. Pod Disruption Budget (PDB)**
-Pod Disruption Budget allows a control over how many instances can be down at the same time during an upgrade process. <br />
+**2. Pod Disruption Budget (PDB)** <br />
+Pod Disruption Budget allows a control over how many pods can be down at the same time during voluntary disruptions - like an upgrade process. <br />
 More information on Pod Disruption Budgets can be found here - https://kubernetes.io/docs/tasks/run-application/configure-pdb/ <br /><br />
 
-**3. NodePool-level Blue-Green set-up**
-
-
-
-
-
-
-
+**3. NodePool-level Blue-Green set-up** <br />
+What is the primary driver behind NodePool-level Blue-Green set-up? Is it faster or does it better ensure application availability? Or does it help for a better rollback? <br /><br />
+Below is the sequence which is to be followed:<br />
+a. Upgrade the Control Plane.<br />
+b. Create a new NodePool (Green) with the upgraded Kubernetes version.<br />
+c. Cordon and drain the older NodePool (Blue). This action will move the workloads to the new NodePool (green).<br />
+d. Delete the older NodePool (Blue).<br />
 
 ### b. Architecture patterns-based measures
-AKS Cluster-level Blue-Green set-up<br /><br />
+**1. AKS Cluster-level Blue-Green set-up** <br />
+AKS Cluster-level Blue-Green set-up is the safest option to perform AKS upgrades. This option gives a better ability to validate the functioning of the applications post an upgrade and it also provides an easy way to perform the roll-back. This option is may be expensive. <br />
+Below is the sequence which is to be followed:<br />
+a. Have an AKS Cluster-level Blue-Green set-up in-place. Essentially, it is 2 AKS Clusters (one Blue and one Green) both sitting behind a single L7 load balancer like an Azure Application Gateway or an Azure Front Door. I am assuming there is an active-active set-up of AKS Clusters such that both the clusters service the requests.<br />
+b. Turn off the traffic flowing to the Green AKS Cluster. <br />
+c. Upgrade the Green AKS Cluster to the higher version of Kubernetes.<br />
+d. Sanity test the Green AKS Cluster.<br />
+e. Allow the traffic to flow to the Green AKS Cluster.<br />
+f. Turn off the traffic flowing to the Blue AKS Cluster.<br />
+g. Upgrade the Blue AKS Cluster to the higher version of Kubernetes.<br />
+h. Sanity test the Blue AKS Cluster.<br />
+i. Allow the traffic to flow to the Blue AKS Cluster.<br /><br />
+
+If an active-active set-up of AKS Clusters is not desired and only one AKS Cluster is to be serving the requests, then the Blue cluster can either be deleted OR can be upgraded and scaled down so that it can be re-purposed as a Green AKS Cluster for the next upgrade.<br /><br />
 
 ## 4. Available AKS upgrades related information
 ### AKS Kubernetes Release calendar
