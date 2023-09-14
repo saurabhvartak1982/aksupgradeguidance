@@ -1,6 +1,6 @@
 # aksupgradeguidance
 ## 1. Kubernetes cluster logical diagram
-![Kubernetes cluster logical diagram](/images/k8sclusterarchitecture.png) <br />
+![Kubernetes cluster logical diagram](/images/k8sclusterarchitecturediag.png) <br />
 Logical diagram here featuring Control Plane and Data Plane
 
 ## 2. Types of AKS related upgrades
