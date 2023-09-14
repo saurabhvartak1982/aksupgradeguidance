@@ -1,30 +1,48 @@
 # aksupgradeguidance
 ## 1. Kubernetes cluster logical diagram
+**Control Plane:** Core Kubernetes Services <br />
+**Data Plane (Nodes in the NodePool):** Nodes running the application workloads <br />
 ![Kubernetes cluster logical diagram](/images/k8sclusterarchitecturediag.png) <br />
-Logical diagram here featuring Control Plane and Data Plane
+Diagram courtesy - https://learn.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#kubernetes-cluster-architecture <br />
+
+Detailed overview on the Control Plane can be found here - https://learn.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#control-plane <br />
+Detailed overview on the Data Plane (Nodes and NodePools) can be found here - https://learn.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#nodes-and-node-pools <br /><br />
 
 ## 2. Types of AKS related upgrades
 ### a. AKS version upgrades for Control Plane and Data Plane
-Upgrade of the AKS versions in Control Plane and NodePools. <br />
-</b> Control plane upgrade includes the System Pods running on Nodes as well.<br />
-Considering the semanting versioning covention of Major (X).Minor(Y).Patch(Z) -- <br/>
-New minor version is available almost every 3 - 4 months. Patch versions usually come in the frequency of 1 month or a few times within a month. <br />
-Minor versions in the support window are the latest and the previous 2 versions -- Y, Y-1, Y-2. <br />
-Each Minor version in the support window include 2 of the latest stable patch versions -- Z, Z-1. <br />
+This upgrade type is related to the AKS versions in Control Plane and NodePools. <br />
+</b> Control Plane upgrade includes the System Pods running on Nodes as well.<br /><br />
+Considering the semanting versioning covention of **Major (X).Minor(Y).Patch(Z)**, new minor version is available almost every 3 - 4 months. Patch versions usually come in the frequency of 1 month or a few times within a month. <br />
+Minor versions in the support window are the latest and the previous 2 versions -- **Y, Y-1, Y-2**. <br />
+Each Minor version in the support window include 2 of the latest stable patch versions -- **Z, Z-1**. <br /><br />
 For the detailed information, please refer to the **Kubernetes version support policy** section at - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
-### b. Node Image Upgrades for the Data Plane Nodes
-Upgrade of the Node Images in the AKS NodePools. New OS image is available almost every 1 week for the Linux OS and almost every 1 month for the Windows OS. Data plane upgrades including kubelet, containerd etc. and the same happen using OS re-imaging. More information on the Node Image Upgrades here - https://learn.microsoft.com/en-us/azure/aks/node-image-upgrade <br /><br />
-### c. Node OS security and kernel updates for the Data Plane Nodes (Linux Nodes)
-OS security fixes or kernel updates for the Nodes in the AKS NodePool. Some of these updates require a node reboot to complete the process. AKS doesn't automatically reboot these Linux nodes to complete the update process. Open-source solutions like KURED to manage the auto-reboot of a particular Node. More information on KURED here - https://github.com/kubereboot/kured <br />
-More information on Node OS security and kernel updates here - https://learn.microsoft.com/en-us/azure/aks/node-updates-kured <br /> <br />
 
-### d. AKS Control Plane maintenance --? <br /><br />
+### b. Node Image Upgrades for the Data Plane Nodes
+This upgrade type is related to the Node Images in the AKS NodePools. New OS image is available almost every 1 week for the Linux OS and almost every 1 month for the Windows OS. More information on the Node Image Upgrades here - https://learn.microsoft.com/en-us/azure/aks/node-image-upgrade <br /><br />
+
+### c. Node OS security and kernel updates for the Data Plane Nodes (Linux Nodes)
+This upgrade type is related to the OS security fixes or kernel updates for the Nodes in the AKS NodePool. Some of these updates require a node reboot to complete the process. AKS doesn't automatically reboot these Linux nodes to complete the update process. Open-source solutions like KURED to manage the auto-reboot of a particular Node. More information on KURED here - https://github.com/kubereboot/kured <br />
+More information on the Node OS security and kernel updates here - https://learn.microsoft.com/en-us/azure/aks/node-updates-kured <br /> <br />
 
 ## 3. Ensuring application availability during upgrades
 ### a. Kubernetes/AKS-based measures
-Node Surge <br />
-Pod Disruption Budgets <br />
-NodePool-level Blue-Green set-up<br /><br />
+**1. Node Surge**
+Node Surge setting indicates the buffer/extra Nodes that are created during the upgrades - at the NodePool level. These extra Node(s) help in minimizing disruptions during the upgrades as well as to tune the upgrade speed. < br />
+Please refer to the section **Customize node surge upgrade** for guidance on this configuration here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#customize-node-surge-upgrade <br /><br />
+
+**2. Pod Disruption Budget (PDB)**
+Pod Disruption Budget allows a control over how many instances can be down at the same time during an upgrade process. <br />
+More information on Pod Disruption Budgets can be found here - https://kubernetes.io/docs/tasks/run-application/configure-pdb/ <br /><br />
+
+**3. NodePool-level Blue-Green set-up**
+
+
+
+
+
+
+
+
 ### b. Architecture patterns-based measures
 AKS Cluster-level Blue-Green set-up<br /><br />
 
