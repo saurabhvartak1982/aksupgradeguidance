@@ -79,7 +79,7 @@ Region-wise AKS Release and AKS Node Images status - https://releases.aks.azure.
 Notification on planned AKS version removal dates - https://learn.microsoft.com/en-us/azure/service-health/service-health-overview <br />
 
 ### Azure Advisor Alerts
-Notification in case if any of the AKS clusters is out of support - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview . Is Microsoft Defender needed to be enabled for the same -----? <br />
+Notification in case if any of the AKS clusters is out of support - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview . <br />
 
 ### az-cli
 a. az aks get-upgrades - for fetching the available upgrades for a particular AKS cluster. More info here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-get-upgrades <br />
