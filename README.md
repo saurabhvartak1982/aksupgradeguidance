@@ -91,7 +91,7 @@ b. az aks nodepool get-upgrades - for fetching the available NodeImage upgrades 
 
 ## 5. Ways to upgrade an AKS cluster
 ### a. Manual
-Cluster and Node Image upgrade
+1. AKS version upgrade for the Control Plane and the Data Plane 
 <b>1. Check for available versions</b> <br />
 az aks get-upgrades ---- for fetching the available upgrades  <br />
 #####      az aks nodepool get-upgrades ----- for fetching the available node image upgrades only, NOT for AKS upgrades <br />
@@ -99,6 +99,7 @@ az aks get-upgrades ---- for fetching the available upgrades  <br />
 ####     Upgrade the Nodepools - 1 NodePool upgrade at a time <br />
 ###      View upgrade events <br />
 ###      Verification of the upgrade which has been performed <br />
+and Node Image upgrade
 
 ### b. Automated <br />
 #### a. Auto-upgrade channel + Maintenance Window <br />
