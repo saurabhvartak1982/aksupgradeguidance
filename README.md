@@ -75,10 +75,10 @@ One can also subscribe to the feeds - https://github.com/Azure/AKS/releases.atom
 ### AKS Release Tracker
 Region-wise AKS Release and AKS Node Images status - https://releases.aks.azure.com/ . How to map a particular AKS version to the AKS release --? <br />
 
-### Service Health Notification
+### Service Health Notification --?
 Notification on planned AKS version removal dates - https://learn.microsoft.com/en-us/azure/service-health/service-health-overview <br />
 
-### Azure Advisor Alerts
+### Azure Advisor Alerts --?
 Notification in case if any of the AKS clusters is out of support - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview . <br />
 
 ### az-cli
@@ -91,8 +91,9 @@ b. az aks nodepool get-upgrades - for fetching the available NodeImage upgrades 
 
 ## 5. Ways to upgrade an AKS cluster
 ### a. Manual
-####     Check for available versions <br />
-#####      az aks get-upgrades ---- for fetching the available upgrades  <br />
+Cluster and Node Image upgrade
+<b>1. Check for available versions</b> <br />
+az aks get-upgrades ---- for fetching the available upgrades  <br />
 #####      az aks nodepool get-upgrades ----- for fetching the available node image upgrades only, NOT for AKS upgrades <br />
 ####     Upgrade the Control Plane <br />
 ####     Upgrade the Nodepools - 1 NodePool upgrade at a time <br />
