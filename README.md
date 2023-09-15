@@ -92,8 +92,35 @@ b. az aks nodepool get-upgrades - for fetching the available NodeImage upgrades 
 ## 5. Ways to upgrade an AKS cluster
 ### a. Manual
 **1. AKS version upgrade for the Control Plane and the Data Plane** <br /><br /> 
-<b>1. Check for available versions</b> <br /><br />
-az aks get-upgrades ---- for fetching the available upgrades  <br />
+<b>a. Check for available versions</b> <br /><br />
+`az aks get-upgrades --resource-group <ResourceGroupName> --name <AKSClusterName> --output table` <br />
+Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-upgrade  <br /><br />
+
+<b>b. Check for the Kubernetes versions of the Nodes in the NodePools</b> <br /><br />
+`az aks nodepool list --resource-group <ResourceGroupName> --cluster-name <AKSClusterName> --query "[].{Name:name,k8version:orchestratorVersion}" --output table` <br />
+Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-list <br /><br />
+
+<b>c. Upgrade the Control Plane</b> <br /><br />
+`az aks upgrade --resource-group <ResourceGroupName> --name <AKSClusterName> --control-plane-only --no-wait --kubernetes-version <KubernetesVersion>` <br />
+Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-upgrade  <br /><br /> 
+
+<b>d. Upgrade the Data Plane</b> <br /><br />
+`az aks nodepool upgrade --resource-group <ResourceGroupName> --cluster-name <AKSClusterName> --name <NodePoolName> --no-wait --kubernetes-version <KubernetesVersion>` <br />
+Upgrade one NodePool at a time <br />
+Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-upgrade <br /><br />
+
+<b>e. View the upgrade events</b> <br /><br />
+`kubectl get events` <br /><br />
+
+<b>f. Verify the upgrade</b> <br /><br />
+`az aks show --resource-group myResourceGroup --name myAKSCluster --output table` <br /><br />
+`az aks nodepool list --resource-group <ResourceGroupName> --cluster-name <AKSClusterName> --query "[].{Name:name,k8version:orchestratorVersion}" --output table` <br /><br />
+
+**2. Node Image Upgrades for the Data Plane Nodes** <br /><br />
+az aks nodepool get-upgrades --resource-group MyResourceGroup --cluster-name MyManagedCluster --nodepool-name MyNodePool <br />
+Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br /><br />
+az aks nodepool upgrade --cluster-name --name --resource-group --node-image-only <br />
+Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-upgrade <br /><br />
 
 #####      az aks nodepool get-upgrades ----- for fetching the available node image upgrades only, NOT for AKS upgrades <br />
 ####     Upgrade the Control Plane <br />
