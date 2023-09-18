@@ -1,8 +1,9 @@
 # Azure Kubernetes Service Upgrade Guidance
 The article discusses the planning for Azure Kubernetes Service related upgrades. <br /><br />
-The first 5 sections provide a quick primer as to what are the different concepts involved as far as Azure Kubernetes Service related upgrades are concerned.<br />
-Section 6 tries to stitch together all these concepts and provides a point-of-view as to how the AKS Cluster upgrades can be planned and executed. <br /><br />
-
+The **first 5 sections** provide a quick primer as to what are the different concepts involved as far as Azure Kubernetes Service related upgrades are concerned.<br />
+**Section 6** and **section 7** tries to stitch together all these concepts and provides a point-of-view as to how the AKS Cluster upgrades can be planned and executed. <br />
+**Section 8** introduces an additional option of the Long Term Support (LTS) - not yet available <br /><br />
+To prevent duplication, the article relies on the official AKS or Kubernetes documentation and mentions the references to the same, wherever applicable. <br /><br />
 ## 1. Kubernetes cluster logical diagram
 **Control Plane:** Core Kubernetes Services <br />
 **Data Plane (Nodes in the NodePool):** Nodes running the application workloads <br />
