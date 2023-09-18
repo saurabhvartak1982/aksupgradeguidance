@@ -5,6 +5,7 @@ The **first 5 sections** provide a quick primer as to what are the different con
 **Section 8** introduces an additional option of the Long Term Support (LTS) - not yet available <br /><br />
 To prevent duplication, the article relies on the official AKS or Kubernetes documentation and mentions the references to the same, wherever applicable. <br /><br />
 ## 1. Kubernetes cluster logical diagram
+A Kubernetes cluster is logically divided into 2 parts: <br /><br />
 **Control Plane:** Core Kubernetes Services <br />
 **Data Plane (Nodes in the NodePool):** Nodes running the application workloads <br />
 ![Kubernetes cluster logical diagram](/images/k8sclusterarchitecturediag.png) <br />
