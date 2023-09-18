@@ -184,7 +184,7 @@ d. If **AKS cluster-level Blue-Green** set-up is in place, ensure that the above
 Kubernetes upgrades - especially when the minor version upgrades - may result in breaking changes. The below steps should be carried out to check if there are any breaking changes: <br /><br />
 a. A quick initial check for any upgrade resulting in changes to the minor version by going through the document here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-components-breaking-changes-by-version <br /><br />
 b. Azure Advisor alerts informing about potential issues due to deprecated APIs - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview -- ? <br /><br />
-c. <b>Kubernetes API Deprecations</b> view in the <b>Diagnostic Setting --> Create, Upgrade, Delete and Scale <b /> of the AKS cluster page. Documentation link here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#remove-usage-of-deprecated-apis-recommended <br /><br />
+c. <b>Kubernetes API Deprecations</b> view in the <b>Diagnostic Setting --> Create, Upgrade, Delete and Scale </b> of the AKS cluster page. Documentation link here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#remove-usage-of-deprecated-apis-recommended <br /><br />
 d. Raising an advisory support case with Microsoft -- ? <br /><br />
 
 ### 4. Upgrades of the AKS clusters in different environments basis the planning done as per section 7.1 of this article
@@ -199,7 +199,7 @@ Whenever any AKS Cluster is upgraded, the AKS upgrade planner (**AKS_Cluster_Upg
 ### 7. Automated/Manual Sanity/Perf Testing post an upgrade -  basis the environment
 Every AKS Cluster upgrade should be be followed by Sanity OR Performance tests for all the applications which are hosted on that upgraded AKS Cluster. <br /><br />
 
-## LTS option (not yet available as of this writing)
+## 8. LTS option (not yet available as of this writing)
 More information here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#long-term-support-lts <br /><br />
 
 
