@@ -25,7 +25,8 @@ Each Minor version in the support window include 2 of the latest stable patch ve
 For the detailed information, please refer to the **Kubernetes version support policy** section at - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
 
 ### b. Node Image Upgrades for the Data Plane Nodes
-This upgrade type is related to the Node Images in the AKS NodePools. New OS image is available almost every 1 week for the Linux OS and almost every 1 month for the Windows OS. An updated Node Image contains up-to-date OS security patches, kernel updates, Kubernetes security updates, newer versions of binaries like kubelet, and component version updates. More information on the Node Image Upgrades here - https://learn.microsoft.com/en-us/azure/aks/node-image-upgrade <br /><br />
+This upgrade type is related to the Node Images in the AKS NodePools. New OS image is available almost every 1 week for the Linux OS and almost every 1 month for the Windows OS.<br />
+<b>An updated Node Image contains up-to-date OS security patches, kernel updates, Kubernetes security updates, newer versions of binaries like kubelet, and component version updates.</b><br /> More information on the Node Image Upgrades here - https://learn.microsoft.com/en-us/azure/aks/node-image-upgrade <br /><br />
 
 ### c. Node OS security and kernel updates for the Data Plane Nodes (Linux Nodes)
 This upgrade type is related to the OS security fixes or kernel updates for the Nodes in the AKS NodePool. Some of these updates require a node reboot to complete the process. AKS doesn't automatically reboot these Linux nodes to complete the update process. Open-source solutions like KURED to manage the auto-reboot of a particular Node. More information on KURED here - https://github.com/kubereboot/kured <br />
@@ -33,7 +34,7 @@ More information on the Node OS security and kernel updates here - https://learn
 
 ## 3. Ensuring application availability during upgrades
 Kubernetes/AKS Upgrades can be disruptive. To minimize the disruptions, certain measures can be put in place as below: <br />
-### a. Kubernetes/AKS-based measures
+### a. Kubernetes/AKS-based measures:
 **1. Node Surge** <br />
 Node Surge setting indicates the buffer/extra Nodes that are created during the upgrades - at the NodePool level. These extra Node(s) help in minimizing disruptions during the upgrades as well as to tune the upgrade speed. <br />
 Please refer to the section **Customize node surge upgrade** for guidance on this configuration here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#customize-node-surge-upgrade <br /><br />
@@ -50,9 +51,9 @@ b. Create a new NodePool (Green) with the upgraded Kubernetes version.<br />
 c. Cordon and drain the older NodePool (Blue). This action will move the workloads to the new NodePool (green).<br />
 d. Delete the older NodePool (Blue).<br />
 
-### b. Architecture patterns-based measures
+### b. Architecture patterns-based measures:
 **1. AKS Cluster-level Blue-Green set-up** <br />
-AKS Cluster-level Blue-Green set-up is the safest option to perform AKS upgrades. This option gives a better ability to validate the functioning of the applications post an upgrade and it also provides an easy way to perform the roll-back. This option is may be expensive. <br />
+AKS Cluster-level Blue-Green set-up is the safest option to perform AKS upgrades. This option gives a better ability to validate the functioning of the applications post an upgrade and it also provides an easy way to perform the roll-back. This option is may prove expensive - cost wise. <br />
 Below is the sequence which is to be followed **(one of the many ways)**:<br /><br />
 a. Have an AKS Cluster-level Blue-Green set-up in-place. Essentially, it is 2 AKS Clusters (one Blue and one Green) both sitting behind a single L7 load balancer like an Azure Application Gateway or an Azure Front Door. I am assuming there is an active-active set-up of AKS Clusters such that both the clusters service the requests.<br />
 b. Turn off the traffic flowing to the Green AKS Cluster. <br />
@@ -69,23 +70,25 @@ If an active-active set-up of AKS Clusters is not desired and only one AKS Clust
 A reference article on the Blue-Green deployment of AKS Clusters can be found here - https://learn.microsoft.com/en-us/azure/architecture/guide/aks/blue-green-deployment-for-aks <br /><br />
 
 ## 4. Available AKS upgrades related information
-### AKS Kubernetes Release calendar
+To know about the upcoming AKS version releases, the below documents/methods can be used: <br /><br />
+**1. AKS Kubernetes Release calendar** <br />
 AKS Kubernetes Release calendar is used to view the upcoming version releases. The same can be found here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar <br />
 
-### AKS Upgrade GitHub release page
+**2. AKS Upgrade GitHub release page** <br />
 Announcements related to the planned date of a new version release and deprecation of the old version. The same can be found here - https://github.com/Azure/AKS/releases <br />
 One can also subscribe to the feeds - https://github.com/Azure/AKS/releases.atom <br />
+**How a particular release is mapped to an upgrade --?** <br />
 
-### AKS Release Tracker
+**3. AKS Release Tracker** <br />
 Region-wise AKS Release and AKS Node Images status - https://releases.aks.azure.com/ . How to map a particular AKS version to the AKS release --? <br />
 
-### Service Health Notification --?
+**4. Service Health Notification --?** <br />
 Notification on planned AKS version removal dates - https://learn.microsoft.com/en-us/azure/service-health/service-health-overview <br />
 
-### Azure Advisor Alerts --?
+**5. Azure Advisor Alerts --?** <br />
 Notification in case if any of the AKS clusters is out of support - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview . <br />
 
-### az-cli
+**6. az-cli** <br />
 a. az aks get-upgrades - for fetching the available upgrades for a particular AKS cluster. More info here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-get-upgrades <br />
 b. az aks nodepool get-upgrades - for fetching the available NodeImage upgrades for a particular NodePool. More info here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br />
 
