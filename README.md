@@ -154,9 +154,24 @@ Day-2 operations comprise of monitoring and maintenance operations of the AKS cl
 Basis the foundation mentioned in the sections 1 to 5 of this article, one of the approaches for carrying out the AKS related Day-2 operations can be as defined in the below sections:  
 
 ## 7. PoV on the Day-2 set-up for AKS cluster upgrades 
-###     Cluster-wise and environment-wise planning of AKS upgrades 
-####      Cluster-wise planning of upgrades of each environment basis the AKS Release calendar- refer AKS_Cluster_Upgrade_Plan.xlsx 
-#####       Frequency of upgrades <br />
+###     Cluster-wise and environment-wise planning of AKS Upgrades
+Below are the considerations for planning of the upgrades related to the AKS Clusters:<br /><br />
+a. The AKS Upgrades should be planned in a way that the clusters in the lower environments are upgraded first and subsequently the ones in the higher environments are upgraded.<br /><br />
+b. The upgrade planning should ensure that **ALL** the clusters in every environment are always in the supported versions' window at any point of time. Please refer to the Kubernetes version support policy here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
+c. The upgrade planning should ensure that any application is sanity/perf tested first on the upgraded lower environment before it's corresponding AKS Cluster on the higher environment is upgraded. <br /><br />
+d. The type of AKS Upgrade (manual/automated) should be clearly noted for better planning. <br /><br />
+e. Sufficient time should be planned for the check on upgrade pre-requisites and a sufficient buffer should be planned for fixing the breaking changes - if any. <br /><br />
+f. Documentation links mentioned in section 4 of this article should be always referred for planning. <br /><br />
+To facilitate better planning related to AKS Upgrades, a sample upgrade plan can be created basis the reference template attached in the form of **AKS_Cluster_Upgrade_Plan.xlsx** <br /><br />
+**Optional screenshot of the xlsx to go here**<br /><br />
+
+####       Frequency of upgrades <br />
+The **Control Plane** of the AKS Cluster is to be upgraded with a cadence that it is always in the supported version. Irrespective of the upgrade method used, **at a minimum**, the upgrade plan should be **equivalent** to the **patch** channel defined for cluster auto-upgrade. <br /><br />
+Documentation link detailing the cluster auto-upgrade channels here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster#use-cluster-auto-upgrade <br /><br />
+
+The **Data Plane** of the AKS Cluster is to be upgraded with a cadence such that its Node Pools are always running with the latest Node Image available for that particular AKS version. Irrespective of the upgrade method used, **at a minimum**, the upgrade plan should be **equivalent** to the **NodeImage** channel defined for cluster auto-upgrade. <br /><br />
+Documentation link detailing the node OS auto-upgrade channels here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-node-image#using-node-os-auto-upgrade <br /><br />
+
 ######            Need to prescribe the upgrade frequency <br />
 #####       Selection of the type of upgrade (automated/manual, upgrade channel, etc. ) basis the environment <br />
 ###     Check for AKS cluster-related pre-requisites for every AKS cluster
