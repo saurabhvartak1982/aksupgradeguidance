@@ -154,7 +154,7 @@ Day-2 operations comprise of monitoring and maintenance operations of the AKS cl
 Basis the foundation mentioned in the sections 1 to 5 of this article, one of the approaches for carrying out the AKS related Day-2 operations can be as defined in the below sections:  
 
 ## 7. PoV on the Day-2 set-up for AKS cluster upgrades 
-###     Cluster-wise and environment-wise planning of AKS Upgrades
+### 1. Cluster-wise and environment-wise planning of AKS Upgrades
 Below are the considerations for planning of the upgrades related to the AKS Clusters:<br /><br />
 a. The AKS Upgrades should be planned in a way that the clusters in the lower environments are upgraded first and subsequently the ones in the higher environments are upgraded.<br /><br />
 b. The upgrade planning should ensure that **ALL** the clusters in every environment are always in the supported versions' window at any point of time. Please refer to the Kubernetes version support policy here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
@@ -172,26 +172,35 @@ Documentation link detailing the cluster auto-upgrade channels here - https://le
 The **Data Plane** of the AKS Cluster is to be upgraded with a cadence such that its Node Pools are always running with the latest Node Image available for that particular AKS version. Irrespective of the upgrade method used, **at a minimum**, the upgrade plan should be **equivalent** to the **NodeImage** channel defined for cluster auto-upgrade. <br /><br />
 Documentation link detailing the node OS auto-upgrade channels here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-node-image#using-node-os-auto-upgrade <br /><br />
 
-######            Need to prescribe the upgrade frequency <br />
-#####       Selection of the type of upgrade (automated/manual, upgrade channel, etc. ) basis the environment <br />
-###     Check for AKS cluster-related pre-requisites for every AKS cluster
-####      Ensure PDBs and Node Surge settings are in place. For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3 <br />
-####      Ensure that the resource quota for the VMs of the NodePool is enough to cater to the NodeSurge
-####      Ensure that the IP address availability is enough to cater to the Node Surge -- Kubectl get nnc -- <br />
-####      If AKS cluster-level Blue-Green set-up is in place, ensure that the above mentioned pre-requsites are in-place for both the clusters <br />
-###     Check for breaking changes 
-####      Check for any breaking changes which may result as a result of the upgrade. This can be done using one of the below 4 methods: <br />
-#####       a. A quick initial check for any upgrade resulting in changes to the minor version by going through the document here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-components-breaking-changes-by-version 
-#####       b. Azure Advisor alerts informing about potential issues due to deprecated APIs - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview 
-#####       c. <b>Kubernetes API Deprecations</b> view in the <b>Diagnostic Setting --> Create, Upgrade, Delete and Scale <b /> of the AKS cluster page
-#####       d. Raising an advisory support case with Microsoft
-###     Sequential upgrades of the AKS clusters different environments basis the schedule defined in AKS_Cluster_Upgrade_Plan.xlsx <br />
-###     Post-upgrade alert <br />
-###     Post-upgrade update of the AKS_Cluster_Upgrade_Plan.xlsx <br />
-###     Automated/Manual Sanity/Perf Testing post an upgrade -  basis the environment <br />
+####       Selection of the type of upgrade (automated/manual, upgrade channel, etc. ) basis the environment -- ? <br />
+### 2. Check for AKS cluster-related pre-requisites for every AKS cluster
+Before the upgrade of any AKS Cluster on any environment, a mechanism of ensuring if the below minimum pre-requisites are met should be in place: <br /><br />
+a. Ensure **PDB** and **Node Surge** settings are in place. For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3 <br /><br />
+b. Ensure that the resource quota for the VMs of the NodePool is enough to cater to the **Node Surge**<br /><br />
+c. Ensure that the **IP address availability** is enough to cater to the **Node Surge** and **Pods Per Node** configurations -- Kubectl get nnc --? . More information here - https://learn.microsoft.com/en-us/azure/aks/azure-cni-overview#plan-ip-addressing-for-your-cluster <br /><br />
+d. If **AKS cluster-level Blue-Green** set-up is in place, ensure that the above mentioned pre-requsites are in-place for both the clusters - **Blue** and **Green** <br /><br />
 
-## LTS option
+### 3. Check for breaking changes  for every AKS Cluster
+Kubernetes upgrades - especially when the minor version upgrades - may result in breaking changes. The below steps should be carried out to check if there are any breaking changes: <br /><br />
+a. A quick initial check for any upgrade resulting in changes to the minor version by going through the document here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-components-breaking-changes-by-version <br /><br />
+b. Azure Advisor alerts informing about potential issues due to deprecated APIs - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview -- ? <br /><br />
+c. <b>Kubernetes API Deprecations</b> view in the <b>Diagnostic Setting --> Create, Upgrade, Delete and Scale <b /> of the AKS cluster page. Documentation link here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#remove-usage-of-deprecated-apis-recommended <br /><br />
+d. Raising an advisory support case with Microsoft -- ? <br /><br />
 
+### 4. Upgrades of the AKS clusters in different environments basis the planning done as per section 7.1 of this article
+This is the step in which the actual execution of upgrades for the AKS Clusters take place. It is to be ensured that all the steps mentioned in sections 7.1, 7.2 and 7.3 are carried out for that particular cluster which is getting upgraded. <br /><br />
+
+### 5. Post-upgrade alert
+For every AKS Cluster, an Azure Monitor alert should be set which informs when an AKS Cluster is upgraded. This is especially important when an automated upgrade method is employed to upgrade an AKS Cluster. <br /><br />
+
+### 6. Post-upgrade update of the AKS_Cluster_Upgrade_Plan.xlsx
+Whenever any AKS Cluster is upgraded, the AKS upgrade planner (**AKS_Cluster_Upgrade_Plan.xlsx** in our reference template example) should be updated with all the details. The AKS upgrades across all the environments should be properly tracked. <br /><br />
+
+### 7. Automated/Manual Sanity/Perf Testing post an upgrade -  basis the environment
+Every AKS Cluster upgrade should be be followed by Sanity OR Performance tests for all the applications which are hosted on that upgraded AKS Cluster. <br /><br />
+
+## LTS option (not yet available as of this writing)
+More information here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#long-term-support-lts <br /><br />
 
 
 
