@@ -1,13 +1,13 @@
 # Azure Kubernetes Service Upgrade Guidance
-The article discusses the planning for Azure Kubernetes Service related upgrades. <br /><br />
+The article discusses how the planning for Azure Kubernetes Service related upgrades can be done. <br /><br />
 The **first 5 sections** provide a quick primer as to what are the different concepts involved as far as Azure Kubernetes Service related upgrades are concerned.<br />
 **Section 6** and **section 7** tries to stitch together all these concepts and provides a point-of-view as to how the AKS Cluster upgrades can be planned and executed. <br />
 **Section 8** introduces an additional option of the Long Term Support (LTS) - not yet available <br /><br />
 To prevent duplication, the article relies on the official AKS or Kubernetes documentation and mentions the references to the same, wherever applicable. <br /><br />
 ## 1. Kubernetes cluster logical diagram
 A Kubernetes cluster is logically divided into 2 parts: <br /><br />
-**Control Plane:** Core Kubernetes Services <br />
-**Data Plane (Nodes in the NodePool):** Nodes running the application workloads <br />
+**a. Control Plane:** Core Kubernetes Services <br />
+**b. Data Plane (Nodes in the NodePool):** Nodes running the application workloads <br />
 ![Kubernetes cluster logical diagram](/images/k8sclusterarchitecturediag.png) <br />
 Diagram courtesy - https://learn.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#kubernetes-cluster-architecture <br />
 
@@ -15,6 +15,7 @@ Detailed overview on the Control Plane can be found here - https://learn.microso
 Detailed overview on the Data Plane (Nodes and NodePools) can be found here - https://learn.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#nodes-and-node-pools <br /><br />
 
 ## 2. Types of AKS related upgrades
+At a higher level, the AKS related upgrades can be broadly classified into three types as below: <br />
 ### a. AKS version upgrades for Control Plane and Data Plane
 This upgrade type is related to the AKS versions in Control Plane and NodePools. <br />
 </b> Control Plane upgrade includes the System Pods running on Nodes as well.<br /><br />
@@ -31,6 +32,7 @@ This upgrade type is related to the OS security fixes or kernel updates for the 
 More information on the Node OS security and kernel updates here - https://learn.microsoft.com/en-us/azure/aks/node-updates-kured <br /> <br />
 
 ## 3. Ensuring application availability during upgrades
+Kubernetes/AKS Upgrades can be disruptive. To minimize the disruptions, certain measures can be put in place as below: <br />
 ### a. Kubernetes/AKS-based measures
 **1. Node Surge** <br />
 Node Surge setting indicates the buffer/extra Nodes that are created during the upgrades - at the NodePool level. These extra Node(s) help in minimizing disruptions during the upgrades as well as to tune the upgrade speed. <br />
@@ -41,8 +43,8 @@ Pod Disruption Budget allows a control over how many pods can be down at the sam
 More information on Pod Disruption Budgets can be found here - https://kubernetes.io/docs/tasks/run-application/configure-pdb/ <br /><br />
 
 **3. NodePool-level Blue-Green set-up** <br />
-What is the primary driver behind NodePool-level Blue-Green set-up? Is it faster or does it better ensure application availability? Or does it help for a better rollback? <br /><br />
-Below is the sequence which is to be followed:<br /><br />
+What is the primary driver behind NodePool-level Blue-Green set-up? Is it faster or does it better ensure application availability? Or does it help for a better rollback -- ? <br /><br />
+Below is the sequence which is to be followed for NodePool-level Blue-Green set-up:<br />
 a. Upgrade the Control Plane.<br />
 b. Create a new NodePool (Green) with the upgraded Kubernetes version.<br />
 c. Cordon and drain the older NodePool (Blue). This action will move the workloads to the new NodePool (green).<br />
