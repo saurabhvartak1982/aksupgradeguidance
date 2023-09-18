@@ -117,36 +117,41 @@ Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepo
 `az aks nodepool list --resource-group <ResourceGroupName> --cluster-name <AKSClusterName> --query "[].{Name:name,k8version:orchestratorVersion}" --output table` <br /><br />
 
 **2. Node Image Upgrades for the Data Plane Nodes** <br /><br />
-az aks nodepool get-upgrades --resource-group MyResourceGroup --cluster-name MyManagedCluster --nodepool-name MyNodePool <br />
+<b>a. Check for the available Node Images for a NodePool</b> <br /><br />
+`az aks nodepool get-upgrades --resource-group MyResourceGroup --cluster-name MyManagedCluster --nodepool-name MyNodePool` <br />
 Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br /><br />
-az aks nodepool upgrade --cluster-name --name --resource-group --node-image-only <br />
+
+<b>b. Upgrade the Node Image of the NodePool</b> <br /><br /> 
+`az aks nodepool upgrade --cluster-name --name --resource-group --node-image-only` <br />
 Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-upgrade <br /><br />
 
-#####      az aks nodepool get-upgrades ----- for fetching the available node image upgrades only, NOT for AKS upgrades <br />
-####     Upgrade the Control Plane <br />
-####     Upgrade the Nodepools - 1 NodePool upgrade at a time <br />
-###      View upgrade events <br />
-###      Verification of the upgrade which has been performed <br />
-and Node Image upgrade
+<b>c. Verify the Node Image version of the NodePool </b> <br /><br />
+`az aks nodepool show --cluster-name --name --resource-group` <br />
+Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-show <br /><br />
 
 ### b. Automated <br />
-#### a. Auto-upgrade channel + Maintenance Window <br />
+#### a. Auto-upgrade channel + Planned Maintenance <br />
+The **Auto-upgrade** feature enables you to automatically upgrade the Cluster/NodePool of an AKS Cluster. The same is achieved by configuring the desired auto-upgrade channel.<br /><br />
 #####     Type of Auto-upgrades <br />
-######        Cluster auto-upgrades <br />
-#######         <more detailing here> <br />
-######        Node OS auto-upgrades <br />
-#######   	<more detailing here> <br />
+<b>1. Cluster auto-upgrades</b> <br /><br/>
+Documentation link here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster <br /><br />
+<b>2. Node OS auto-upgrades</b> <br /><br />
+Documentation link here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-node-image <br /><br />
 #####     Maintenance Window <br />
-######      Window for Cluster Upgrade <br />
-#######	      <more detailing here> <br />
-######      Window for Node Upgrade <br />
-#######       <more detailing here> <br />
+The **Planned Maintenance** feature enables you to schedule the auto-upgrades in a cadence of your choice so that the impact can be minimized. The scheduling of the auto-upgrades can be done at the below two levels: <br /><br />
+<b>1. Scheduling of the auto-upgrades at the Cluster-level</b> <br />
+<b>2. Scheduling of the auto-upgrades at the NodePool-level</b> <br />
+Documentation link related to **Planned Maintenance** here - https://learn.microsoft.com/en-us/azure/aks/planned-maintenance <br /><br />
 
 #### b. GitHub Actions OR Cron Jobs <br /><br />
+Automatic upgrades to the AKS Clusters can also be automatically scheduled by using GitHub Actions or any other similar scheduling tool. <br />
+Documentation link here - https://learn.microsoft.com/en-us/azure/aks/node-upgrade-github-actions <br /><br />
+
+<b>Very Important - Whichever approach is decided, it is important to ensure that the AKS Cluster is always running in the supported version and on one of the latest Node Images.</b> <br /><br />
 
 ## 6. Day-2 operations related to AKS
 Day-2 operations comprise of monitoring and maintenance operations of the AKS cluster. AKS related upgrades are part of the maintenance operations. <br />
-Basis the first 5 sections of the document, one of the PoV for the AKS Day-2 operations can be as defined in the below sections:  
+Basis the foundation mentioned in the sections 1 to 5 of this article, one of the approaches for carrying out the AKS related Day-2 operations can be as defined in the below sections:  
 
 ## 7. PoV on the Day-2 set-up for AKS cluster upgrades 
 ###     Cluster-wise and environment-wise planning of AKS upgrades 
