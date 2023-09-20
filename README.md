@@ -1,9 +1,12 @@
 # Azure Kubernetes Service Upgrade Guidance
 The article discusses how the planning for Azure Kubernetes Service related upgrades can be done. <br /><br />
 The **first 5 sections** provide a quick primer as to what are the different concepts involved as far as Azure Kubernetes Service related upgrades are concerned.<br />
-**Section 6** and **section 7** tries to stitch together all these concepts and provides a point-of-view as to how the AKS Cluster upgrades can be planned and executed. <br />
+**Section 6** gives a quick intro to the **AKS related Day-2 operations** and **section 7** tries to stitch together all these concepts and provides a point-of-view as to how the AKS Cluster upgrades can be planned and executed. <br />
 **Section 8** introduces an additional option of the Long Term Support (LTS) - not yet available <br /><br />
 To prevent duplication, the article relies on the official AKS or Kubernetes documentation and mentions the references to the same, wherever applicable. <br /><br />
+
+**Kindly note - the approach depicted in this article is personal. Reader's discretion is advised** <br /><br />
+
 ## 1. Kubernetes cluster logical diagram
 A Kubernetes cluster is logically divided into 2 parts: <br /><br />
 **a. Control Plane:** Core Kubernetes Services <br />
@@ -36,7 +39,7 @@ More information on the Node OS security and kernel updates here - https://learn
 Kubernetes/AKS Upgrades can be disruptive. To minimize the disruptions, certain measures can be put in place as below: <br />
 ### a. Kubernetes/AKS-based measures:
 **1. Node Surge** <br />
-Node Surge setting indicates the buffer/extra Nodes that are created during the upgrades - at the NodePool level. These extra Node(s) help in minimizing disruptions during the upgrades as well as to tune the upgrade speed. <br />
+Node Surge setting indicates the buffer/extra Node(s) that are created during the upgrades - at the NodePool level. These extra Node(s) help in minimizing disruptions during the upgrades as well as to tune the upgrade speed. <br />
 Please refer to the section **Customize node surge upgrade** for guidance on this configuration here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#customize-node-surge-upgrade <br /><br />
 
 **2. Pod Disruption Budget (PDB)** <br />
@@ -53,7 +56,10 @@ d. Delete the older NodePool (Blue).<br />
 
 ### b. Architecture patterns-based measures:
 **1. AKS Cluster-level Blue-Green set-up** <br />
-AKS Cluster-level Blue-Green set-up is the safest option to perform AKS upgrades. This option gives a better ability to validate the functioning of the applications post an upgrade and it also provides an easy way to perform the roll-back. This option is may prove expensive - cost wise. <br />
+AKS Cluster-level Blue-Green set-up is the safest option to perform the AKS upgrades. This option gives a better ability to validate the functioning of the applications post an upgrade and it also provides an easy way to perform the roll-back. This option is may prove expensive - cost wise. <br /><br />
+![AKS Blue-Green set-up](/images/AKSBlueGreen.png) <br />
+Diagram courtesy - https://learn.microsoft.com/en-us/azure/architecture/guide/aks/blue-green-deployment-for-aks#architecture<br /><br />
+
 Below is the sequence which is to be followed **(one of the many ways)**:<br /><br />
 a. Have an AKS Cluster-level Blue-Green set-up in-place. Essentially, it is 2 AKS Clusters (one Blue and one Green) both sitting behind a single L7 load balancer like an Azure Application Gateway or an Azure Front Door. I am assuming there is an active-active set-up of AKS Clusters such that both the clusters service the requests.<br />
 b. Turn off the traffic flowing to the Green AKS Cluster. <br />
@@ -97,6 +103,7 @@ b. az aks nodepool get-upgrades - for fetching the available NodeImage upgrades 
 
 
 ## 5. Ways to upgrade an AKS cluster
+An AKS can be updated by carrying out some manual steps and also in an automated way. Both the approaches are explained as below: <br /><br />
 ### a. Manual
 **1. AKS version upgrade for the Control Plane and the Data Plane** <br /><br /> 
 <b>a. Check for available versions</b> <br /><br />
@@ -123,6 +130,7 @@ Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepo
 `az aks show --resource-group myResourceGroup --name myAKSCluster --output table` <br /><br />
 `az aks nodepool list --resource-group <ResourceGroupName> --cluster-name <AKSClusterName> --query "[].{Name:name,k8version:orchestratorVersion}" --output table` <br /><br />
 
+Reference documentation here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli <br /><br />
 **2. Node Image Upgrades for the Data Plane Nodes** <br /><br />
 <b>a. Check for the available Node Images for a NodePool</b> <br /><br />
 `az aks nodepool get-upgrades --resource-group MyResourceGroup --cluster-name MyManagedCluster --nodepool-name MyNodePool` <br />
