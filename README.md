@@ -168,7 +168,7 @@ Documentation link here - https://learn.microsoft.com/en-us/azure/aks/node-upgra
 Day-2 operations comprise of monitoring and maintenance operations of the AKS cluster. AKS related upgrades are part of the maintenance operations. <br />
 Basis the foundation mentioned in the sections 1 to 5 of this article, one of the approaches for carrying out the AKS related Day-2 operations can be as defined in the below sections:  
 
-## 7. PoV on the Day-2 set-up for AKS cluster upgrades 
+## 7. Point-of-view on the Day-2 set-up for AKS cluster upgrades 
 ### 1. Cluster-wise and environment-wise planning of AKS Upgrades
 Below are the considerations for planning of the upgrades related to the AKS Clusters:<br /><br />
 a. The AKS Upgrades should be planned in a way that the clusters in the lower environments are upgraded first and subsequently the ones in the higher environments are upgraded.<br /><br />
