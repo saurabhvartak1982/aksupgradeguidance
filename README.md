@@ -217,6 +217,15 @@ Every AKS Cluster upgrade should be be followed by Sanity OR Performance tests f
 ## 8. LTS option (not yet available as of this writing)
 More information here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#long-term-support-lts <br /><br />
 
+# Contributions to this article
+Thank you for valuable inputs and reviews: <br /><br />
+Yusuf Rangwala (https://github.com/whereisyusuf) <br />
+Chetan Vaja (https://github.com/chetanv-code) <br />
+Amruta Deshpande (https://github.com/amruta53) <br /><br />
+
+Thank you for inputs on the Blue-Green approach: <br /><br />
+Rishabh Saha (https://github.com/rishabhsaha) <br /><br />
+
 
 
 			
