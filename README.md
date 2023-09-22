@@ -99,22 +99,21 @@ Notification on planned AKS version removal dates - https://learn.microsoft.com/
 Notification in case if any of the AKS clusters is out of support - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview . <br />
 
 **6. az-cli** <br />
-a. az aks get-upgrades - for fetching the available upgrades for a particular AKS cluster. <br /><br />
+a. **az aks get-upgrades** - for fetching the available upgrades for a particular AKS cluster. <br /><br />
 ![AKS Cluster Version Get Upgrades](/images/AKSClusterVersionGetUpgrades.png) <br /><br />
 
 More info here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-get-upgrades <br /><br />
-b. az aks nodepool get-upgrades - for fetching the available NodeImage upgrades for a particular NodePool. <br /><br />
+b. **az aks nodepool get-upgrades** - for fetching the available NodeImage upgrades for a particular NodePool. <br /><br />
 ![AKS NodePool Get Upgrades](/images/AKSNodeImageGetUpgrades.png) <br /><br />
 More info here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br /><br />
 
-### Microsoft Defender Notifications --? ... need to detail what info is provided by this document? <br />
-### Availability of a patch upgrade ---? ... need to detail what info is provided by this document? <br />
+### Microsoft Defender Notifications --? ... need to detail what info is provided by this document? <br /><br />
 
 
 ## 5. Ways to upgrade an AKS cluster
-An AKS can be updated by carrying out some manual steps and also in an automated way. Both the approaches are explained as below: <br /><br />
+An AKS can be updated by carrying out some **manual** steps and also in an **automated** way. Both the approaches are explained as below: <br /><br />
 ### a. Manual
-**1. AKS version upgrade for the Control Plane and the Data Plane** <br /><br /> 
+**1. AKS version upgrade for the Control Plane and the Data Plane**. The broader steps involved in the **manual** upgrade are as below: <br /><br /> 
 <b>a. Check for available versions</b> <br /><br />
 `az aks get-upgrades --resource-group <ResourceGroupName> --name <AKSClusterName> --output table` <br />
 Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-upgrade  <br /><br />
@@ -140,7 +139,7 @@ Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepo
 `az aks nodepool list --resource-group <ResourceGroupName> --cluster-name <AKSClusterName> --query "[].{Name:name,k8version:orchestratorVersion}" --output table` <br /><br />
 
 Reference documentation here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli <br /><br />
-**2. Node Image Upgrades for the Data Plane Nodes** <br /><br />
+**2. Node Image Upgrades for the Data Plane Nodes**. The broader steps involved in the **manual** upgrade are as below: <br /><br />
 <b>a. Check for the available Node Images for a NodePool</b> <br /><br />
 `az aks nodepool get-upgrades --resource-group MyResourceGroup --cluster-name MyManagedCluster --nodepool-name MyNodePool` <br />
 Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br /><br />
@@ -186,11 +185,11 @@ c. The upgrade planning should ensure that any application is sanity/perf tested
 d. The type of AKS Upgrade (manual/automated) should be clearly noted for better planning. <br /><br />
 e. Sufficient time should be planned for the check on upgrade pre-requisites and a sufficient buffer should be planned for fixing the breaking changes - if any. <br /><br />
 f. Documentation links mentioned in section 4 of this article should be always referred for planning. <br /><br />
-To facilitate better planning related to AKS Upgrades, a sample upgrade plan can be created basis the reference template attached in the form of **AKS_Cluster_Upgrade_Plan.xlsx** <br /><br />
-**Optional screenshot of the xlsx to go here**<br /><br />
+To facilitate better planning related to AKS Upgrades, a sample upgrade plan can be created basis the reference template attached in the form of **AKS_Cluster_Upgrade_Plan.xlsx**. Below is the screenshot of the same: <br /><br />
+![AKS Cluster Upgrade Plan](/images/AKS_Cluster_Upgrade_Plan.png) <br /><br />
 
 ####       Frequency of upgrades <br />
-The **Control Plane** of the AKS Cluster is to be upgraded with a cadence that it is always in the supported version. Irrespective of the upgrade method used, **at a minimum**, the upgrade plan should be **equivalent** to the **patch** channel defined for cluster auto-upgrade. <br /><br />
+The **Control Plane** of the AKS Cluster is to be upgraded with a cadence that it is always in the supported version. Irrespective of the upgrade method used, **at a minimum**, the upgrade plan should be **equivalent** to the **patch** channel defined for cluster auto-upgrade. **-- ?** <br /><br />
 Documentation link detailing the cluster auto-upgrade channels here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster#use-cluster-auto-upgrade <br /><br />
 
 The **Data Plane** of the AKS Cluster is to be upgraded with a cadence such that its Node Pools are always running with the latest Node Image available for that particular AKS version. Irrespective of the upgrade method used, **at a minimum**, the upgrade plan should be **equivalent** to the **NodeImage** channel defined for cluster auto-upgrade. <br /><br />
@@ -215,7 +214,7 @@ d. Raising an advisory support case with Microsoft -- ? <br /><br />
 This is the step in which the actual execution of upgrades for the AKS Clusters take place. It is to be ensured that all the steps mentioned in sections 7.1, 7.2 and 7.3 are carried out for that particular cluster which is getting upgraded. <br /><br />
 
 ### 5. Post-upgrade alert
-For every AKS Cluster, an Azure Monitor alert should be set which informs when an AKS Cluster is upgraded. This is especially important when an automated upgrade method is employed to upgrade an AKS Cluster. <br /><br />
+For every AKS Cluster, an Azure Monitor alert should be set which informs when an AKS Cluster is upgraded. This is especially important when an automated upgrade method is employed to upgrade an AKS Cluster. **-- ?** <br /><br />
 
 ### 6. Post-upgrade update of the AKS_Cluster_Upgrade_Plan.xlsx
 Whenever any AKS Cluster is upgraded, the AKS upgrade planner (**AKS_Cluster_Upgrade_Plan.xlsx** in our reference template example) should be updated with all the details. The AKS upgrades across all the environments should be properly tracked. <br /><br />
