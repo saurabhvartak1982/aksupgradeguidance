@@ -20,7 +20,9 @@ Detailed overview on the Data Plane (Nodes and NodePools) can be found here - ht
 ## 2. Types of AKS related upgrades
 At a higher level, the AKS related upgrades can be broadly classified into three types as below: <br />
 ### a. AKS version upgrades for Control Plane and Data Plane
-This upgrade type is related to the AKS versions in Control Plane and NodePools. <br />
+This upgrade type is related to the AKS versions in Control Plane and NodePools. <br /><br />
+![AKS Cluster version](/images/AKSClusterVersion.png) <br /><br />
+
 </b> Control Plane upgrade includes the System Pods running on Nodes as well.<br /><br />
 Considering the semanting versioning convention of **Major (X).Minor(Y).Patch(Z)**, new minor version is available almost every 3 - 4 months. Patch versions usually come in the frequency of 1 month or a few times within a month. <br />
 Minor versions in the support window are the latest and the previous 2 versions -- **Y, Y-1, Y-2**. <br />
@@ -28,7 +30,9 @@ Each Minor version in the support window include 2 of the latest stable patch ve
 For the detailed information, please refer to the **Kubernetes version support policy** section at - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
 
 ### b. Node Image Upgrades for the Data Plane Nodes
-This upgrade type is related to the Node Images in the AKS NodePools. New OS image is available almost every 1 week for the Linux OS and almost every 1 month for the Windows OS.<br />
+This upgrade type is related to the Node Images in the AKS NodePools. New OS image is available almost every 1 week for the Linux OS and almost every 1 month for the Windows OS.<br /><br />
+![AKS Node Image version](/images/AKSNodeImageVersion.png) <br /><br />
+
 <b>An updated Node Image contains up-to-date OS security patches, kernel updates, Kubernetes security updates, newer versions of binaries like kubelet, and component version updates.</b><br /> More information on the Node Image Upgrades here - https://learn.microsoft.com/en-us/azure/aks/node-image-upgrade <br /><br />
 
 ### c. Node OS security and kernel updates for the Data Plane Nodes (Linux Nodes)
@@ -86,7 +90,7 @@ One can also subscribe to the feeds - https://github.com/Azure/AKS/releases.atom
 **How a particular release is mapped to an upgrade --?** <br />
 
 **3. AKS Release Tracker** <br />
-Region-wise AKS Release and AKS Node Images status - https://releases.aks.azure.com/ . How to map a particular AKS version to the AKS release --? <br />
+Region-wise AKS Release and AKS Node Images status - https://releases.aks.azure.com/ . <br />
 
 **4. Service Health Notification --?** <br />
 Notification on planned AKS version removal dates - https://learn.microsoft.com/en-us/azure/service-health/service-health-overview <br />
@@ -95,8 +99,13 @@ Notification on planned AKS version removal dates - https://learn.microsoft.com/
 Notification in case if any of the AKS clusters is out of support - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview . <br />
 
 **6. az-cli** <br />
-a. az aks get-upgrades - for fetching the available upgrades for a particular AKS cluster. More info here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-get-upgrades <br />
-b. az aks nodepool get-upgrades - for fetching the available NodeImage upgrades for a particular NodePool. More info here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br />
+a. az aks get-upgrades - for fetching the available upgrades for a particular AKS cluster. <br /><br />
+![AKS Cluster Version Get Upgrades](/images/AKSClusterVersionGetUpgrades.png) <br /><br />
+
+More info here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-get-upgrades <br /><br />
+b. az aks nodepool get-upgrades - for fetching the available NodeImage upgrades for a particular NodePool. <br /><br />
+![AKS NodePool Get Upgrades](/images/AKSNodeImageGetUpgrades.png) <br /><br />
+More info here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br /><br />
 
 ### Microsoft Defender Notifications --? ... need to detail what info is provided by this document? <br />
 ### Availability of a patch upgrade ---? ... need to detail what info is provided by this document? <br />
