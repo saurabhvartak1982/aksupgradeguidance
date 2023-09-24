@@ -5,7 +5,7 @@ The **first 5 sections** provide a quick primer as to what are the different con
 **Section 8** introduces an additional option of the Long Term Support (LTS) - not yet available <br /><br />
 To prevent duplication, the article relies on the official AKS or Kubernetes documentation and mentions the references to the same, wherever applicable. <br /><br />
 
-**Kindly note - the approach depicted in this article is personal. Reader's discretion is advised** <br /><br />
+**Kindly note - the approach depicted in this article is a personal point of view. Reader's discretion is advised** <br /><br />
 
 ## 1. Kubernetes cluster logical diagram
 A Kubernetes cluster is logically divided into 2 parts: <br /><br />
@@ -65,14 +65,14 @@ AKS Cluster-level Blue-Green set-up is the safest option to perform the AKS upgr
 Diagram courtesy - https://learn.microsoft.com/en-us/azure/architecture/guide/aks/blue-green-deployment-for-aks#architecture<br /><br />
 
 Below is the sequence which is to be followed **(one of the many ways)**:<br /><br />
-a. Have an AKS Cluster-level Blue-Green set-up in-place. Essentially, it is 2 AKS Clusters (one Blue and one Green) both sitting behind a single L7 load balancer like an Azure Application Gateway or an Azure Front Door. I am assuming there is an active-active set-up of AKS Clusters such that both the clusters service the requests.<br />
-b. Turn off the traffic flowing to the Green AKS Cluster. <br />
-c. Upgrade the Green AKS Cluster to the higher version of Kubernetes.<br />
-d. Sanity test the Green AKS Cluster.<br />
-e. Allow the traffic to flow to the Green AKS Cluster.<br />
-f. Turn off the traffic flowing to the Blue AKS Cluster.<br />
-g. Upgrade the Blue AKS Cluster to the higher version of Kubernetes.<br />
-h. Sanity test the Blue AKS Cluster.<br />
+a. Have an AKS Cluster-level Blue-Green set-up in-place. Essentially, it is 2 AKS Clusters (one Blue and one Green) both sitting behind a single L7 load balancer like an Azure Application Gateway or an Azure Front Door. I am assuming there is an active-active set-up of AKS Clusters such that both the clusters service the requests.<br /><br />
+b. Turn off the traffic flowing to the Green AKS Cluster. <br /><br />
+c. Upgrade the Green AKS Cluster to the higher version of Kubernetes.<br /><br />
+d. Sanity test the Green AKS Cluster.<br /><br />
+e. Allow the traffic to flow to the Green AKS Cluster.<br /><br />
+f. Turn off the traffic flowing to the Blue AKS Cluster.<br /><br />
+g. Upgrade the Blue AKS Cluster to the higher version of Kubernetes.<br /><br />
+h. Sanity test the Blue AKS Cluster.<br /><br />
 i. Allow the traffic to flow to the Blue AKS Cluster.<br /><br />
 
 If an active-active set-up of AKS Clusters is not desired and only one AKS Cluster is to be serving the requests, then the Blue cluster can either be deleted OR can be upgraded and scaled down so that it can be re-purposed as a Green AKS Cluster for the next upgrade.<br /><br />
@@ -87,7 +87,6 @@ AKS Kubernetes Release calendar is used to view the upcoming version releases. T
 **2. AKS Upgrade GitHub release page** <br />
 Announcements related to the planned date of a new version release and deprecation of the old version. The same can be found here - https://github.com/Azure/AKS/releases <br />
 One can also subscribe to the feeds - https://github.com/Azure/AKS/releases.atom <br />
-**How a particular release is mapped to an upgrade --?** <br />
 
 **3. AKS Release Tracker** <br />
 Region-wise AKS Release and AKS Node Images status - https://releases.aks.azure.com/ . <br />
@@ -155,7 +154,7 @@ Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepo
 ### b. Automated <br />
 #### a. Auto-upgrade channel + Planned Maintenance <br />
 The **Auto-upgrade** feature enables you to automatically upgrade the Cluster/NodePool of an AKS Cluster. The same is achieved by configuring the desired auto-upgrade channel.<br /><br />
-#####     Type of Auto-upgrades <br />
+#####  Type of Auto-upgrades <br />
 <b>1. Cluster auto-upgrades</b> <br /><br/>
 Documentation link here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster <br /><br />
 <b>2. Node OS auto-upgrades</b> <br /><br />
@@ -225,7 +224,7 @@ Every AKS Cluster upgrade should be be followed by Sanity OR Performance tests f
 ## 8. LTS option (not yet available as of this writing)
 More information here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#long-term-support-lts <br /><br />
 
-# Contributions to this article
+# Acknowledgements
 Thank you for valuable inputs and reviews: <br /><br />
 Yusuf Rangwala (https://github.com/whereisyusuf) <br />
 Chetan Vaja (https://github.com/chetanv-code) <br />
