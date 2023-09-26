@@ -134,7 +134,7 @@ Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepo
 `az aks show --resource-group myResourceGroup --name myAKSCluster --output table` <br /><br />
 `az aks nodepool list --resource-group <ResourceGroupName> --cluster-name <AKSClusterName> --query "[].{Name:name,k8version:orchestratorVersion}" --output table` <br /><br />
 
-Reference documentation here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli <br /><br />
+Reference documentation here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli <br /><br /><br />
 **2. Node Image Upgrades for the Data Plane Nodes**. The broader steps involved in the **manual** upgrade are as below: <br /><br />
 <b>a. Check for the available Node Images for a NodePool</b> <br /><br />
 `az aks nodepool get-upgrades --resource-group MyResourceGroup --cluster-name MyManagedCluster --nodepool-name MyNodePool` <br />
@@ -222,7 +222,7 @@ More information on subscribing to the AKS events with Azure Event Grid here - h
 Whenever any AKS Cluster is upgraded, the AKS upgrade planner (**AKS_Cluster_Upgrade_Plan.xlsx** in our reference template example) should be updated with all the details. The AKS upgrades across all the environments should be properly tracked. <br /><br />
 
 ### 7. Automated/Manual Sanity/Perf Testing post an upgrade -  basis the environment
-Every AKS Cluster upgrade should be be followed by Sanity OR Performance tests for all the applications which are hosted on that upgraded AKS Cluster. <br /><br />
+Every AKS Cluster upgrade should be be followed by Sanity AND/OR Performance tests for all the applications which are hosted on that upgraded AKS Cluster. <br /><br />
 
 ## 8. LTS option (not yet available as of this writing)
 More information here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#long-term-support-lts <br /><br />
