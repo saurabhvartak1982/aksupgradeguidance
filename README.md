@@ -91,13 +91,12 @@ One can also subscribe to the feeds - https://github.com/Azure/AKS/releases.atom
 **3. AKS Release Tracker** <br />
 Region-wise AKS Release and AKS Node Images status - https://releases.aks.azure.com/ . <br />
 
-**4. Service Health Notification --?** <br />
-Notification on planned AKS version removal dates - https://learn.microsoft.com/en-us/azure/service-health/service-health-overview <br />
+**4. AKS events with Azure Event Grid** <br />
+AKS events can be subscribed to using the Azure Event Grid. One of the Event Type is **Microsoft.ContainerService.NewKubernetesVersionAvailable** which gets triggered when the list of available Kubernetes versions is updated. <br />
+More information on the available event types for AKS here - https://learn.microsoft.com/en-us/azure/event-grid/event-schema-aks?tabs=event-grid-event-schema <br />
+More information on subscribing to the AKS events with Azure Event Grid here - https://learn.microsoft.com/en-us/azure/aks/quickstart-event-grid?tabs=azure-cli <br /><br />
 
-**5. Azure Advisor Alerts --?** <br />
-Notification in case if any of the AKS clusters is out of support - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview . <br />
-
-**6. az-cli** <br />
+**5. az-cli** <br />
 a. **az aks get-upgrades** - for fetching the available upgrades for a particular AKS cluster. <br /><br />
 ![AKS Cluster Version Get Upgrades](/images/AKSClusterVersionGetUpgrades.png) <br /><br />
 
@@ -105,8 +104,6 @@ More info here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-
 b. **az aks nodepool get-upgrades** - for fetching the available NodeImage upgrades for a particular NodePool. <br /><br />
 ![AKS NodePool Get Upgrades](/images/AKSNodeImageGetUpgrades.png) <br /><br />
 More info here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br /><br />
-
-### Microsoft Defender Notifications --? ... need to detail what info is provided by this document? <br /><br />
 
 
 ## 5. Ways to upgrade an AKS cluster
@@ -188,7 +185,7 @@ To facilitate better planning related to AKS Upgrades, a sample upgrade plan can
 ![AKS Cluster Upgrade Plan](/images/AKS_Cluster_Upgrade_Plan.png) <br /><br />
 
 ####       Frequency of upgrades <br />
-The **Control Plane** of the AKS Cluster is to be upgraded with a cadence that it is always in the supported version. Irrespective of the upgrade method used, **at a minimum**, the upgrade plan should be **equivalent** to the **patch** channel defined for cluster auto-upgrade. **-- ?** <br /><br />
+The **Control Plane** of the AKS Cluster is to be upgraded with a cadence such that it is always in the supported version. Irrespective of the upgrade method used, **at a minimum**, the upgrade plan should be **equivalent** to the **patch** channel defined for cluster auto-upgrade. Kindly note that the **patch** channel will not upgrade the **minor version**. So if a particular AKS Cluster configured with the **auto-upgrade channel** of type **patch** is on a particular **minor version** and if that **minor version** goes out of support, then the AKS Cluster will need to be upgraded to the next minor version **manually**.  <br /><br />
 Documentation link detailing the cluster auto-upgrade channels here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster#use-cluster-auto-upgrade <br /><br />
 
 The **Data Plane** of the AKS Cluster is to be upgraded with a cadence such that its Node Pools are always running with the latest Node Image available for that particular AKS version. Irrespective of the upgrade method used, **at a minimum**, the upgrade plan should be **equivalent** to the **NodeImage** channel defined for cluster auto-upgrade. <br /><br />
@@ -213,7 +210,13 @@ d. Raising an advisory support case with Microsoft -- ? <br /><br />
 This is the step in which the actual execution of upgrades for the AKS Clusters take place. It is to be ensured that all the steps mentioned in sections 7.1, 7.2 and 7.3 are carried out for that particular cluster which is getting upgraded. <br /><br />
 
 ### 5. Post-upgrade alert
-For every AKS Cluster, an Azure Monitor alert should be set which informs when an AKS Cluster is upgraded. This is especially important when an automated upgrade method is employed to upgrade an AKS Cluster. **-- ?** <br /><br />
+For every AKS Cluster, an Azure Monitor alert should be set which informs when an AKS Cluster is upgraded. This is especially important when an automated upgrade method is employed to upgrade an AKS Cluster.  <br />
+A snapshot as to how an AKS-upgrade related Azure Monitor alert can be set is as below: <br /><br />
+![AKS Azure Monitor Alert](/images/AKS_Azure_Monitor_Alert.png) <br /><br />
+
+AKS events can also be used to know when an AKS Cluster has been upgraded. AKS events can be subscribed to using the Azure Event Grid. One of the Event Type is **Microsoft.ContainerService.NodePoolRollingSucceeded** which gets triggered when the NodePoolRolling is succeeded as a result of an upgrade or an update. <br />
+More information on the available event types for AKS here - https://learn.microsoft.com/en-us/azure/event-grid/event-schema-aks?tabs=event-grid-event-schema <br />
+More information on subscribing to the AKS events with Azure Event Grid here - https://learn.microsoft.com/en-us/azure/aks/quickstart-event-grid?tabs=azure-cli <br /><br />
 
 ### 6. Post-upgrade update of the AKS_Cluster_Upgrade_Plan.xlsx
 Whenever any AKS Cluster is upgraded, the AKS upgrade planner (**AKS_Cluster_Upgrade_Plan.xlsx** in our reference template example) should be updated with all the details. The AKS upgrades across all the environments should be properly tracked. <br /><br />
