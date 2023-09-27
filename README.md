@@ -24,7 +24,8 @@ This upgrade type is related to the AKS versions in Control Plane and NodePools.
 ![AKS Cluster version](/images/AKSClusterVersion.png) <br /><br />
 
 </b> Control Plane upgrade includes the System Pods running on Nodes as well.<br /><br />
-Considering the semanting versioning convention of **Major (X).Minor(Y).Patch(Z)**, new minor version is available almost every 3 - 4 months. Patch versions usually come in the frequency of 1 month or a few times within a month. <br />
+AKS follows the upstream kubernetes release cycle. A new minor version of kubernetes is released roughly every 4 months. This version will make its way to AKS roughly after 3-4 months after the upstream release.  
+Referring to the Semantic Versioning convention of **Major (X).Minor(Y).Patch(Z)**, new minor version in AKS is available almost every 3 - 4 months. Patch versions usually come in the frequency of 1 month or a few times within a month. <br />
 Minor versions in the support window are the latest and the previous 2 versions -- **Y, Y-1, Y-2**. <br />
 Each Minor version in the support window include 2 of the latest stable patch versions -- **Z, Z-1**. <br /><br />
 For the detailed information, please refer to the **Kubernetes version support policy** section at - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
