@@ -51,9 +51,9 @@ Pod Disruption Budget allows a control over how many pods can be down at the sam
 More information on Pod Disruption Budgets can be found here - https://kubernetes.io/docs/tasks/run-application/configure-pdb/ <br /><br />
 
 **3. NodePool-level Blue-Green set-up** <br />
-What is the primary driver behind NodePool-level Blue-Green set-up? Is it faster or does it better ensure application availability? Or does it help for a better rollback -- ? <br /><br />
+The primary driver behind having the NodePool-level Blue-Green set-up is to make the NodePool upgrades faster. <br /><br />
 Below is the sequence which is to be followed for NodePool-level Blue-Green set-up:<br />
-a. Upgrade the Control Plane.<br />
+a. Upgrade the Control Plane with the desired Kubernetes version.<br />
 b. Create a new NodePool (Green) with the upgraded Kubernetes version.<br />
 c. Cordon and drain the older NodePool (Blue). This action will move the workloads to the new NodePool (green).<br />
 d. Delete the older NodePool (Blue).<br />
@@ -191,7 +191,13 @@ Documentation link detailing the cluster auto-upgrade channels here - https://le
 The **Data Plane** of the AKS Cluster is to be upgraded with a cadence such that its Node Pools are always running with the latest Node Image available for that particular AKS version. Irrespective of the upgrade method used, **at a minimum**, the upgrade plan should be **equivalent** to the **NodeImage** channel defined for cluster auto-upgrade. <br /><br />
 Documentation link detailing the node OS auto-upgrade channels here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-node-image#using-node-os-auto-upgrade <br /><br />
 
-####       Selection of the type of upgrade (automated/manual, upgrade channel, etc. ) basis the environment -- ? <br />
+####       Selection of the type of upgrade (automated/manual, upgrade channel, etc. ) basis the environment <br />
+Selection of the upgrade type - Automated OR Manual depends primarily on the below 2 factors: <br /><br />
+a. Maturity of the DevOps practices <br />
+b. Risk appetite <br /><br />
+
+If the DevOps maturity is high and if there is a high risk appetite, then one can go with the automated upgrades for all the environments. Or else a more controlled approach of manual upgrades can be chosen.<br />
+A mixed approach can also be considered where the lower environments can be configured for auto-upgrades (to reduce manual effort) and the higher environments can be upgraded manually. <br /><br />
 ### 2. Check for AKS cluster-related pre-requisites for every AKS cluster
 Before the upgrade of any AKS Cluster on any environment, a mechanism of ensuring if the below minimum pre-requisites are met should be in place: <br /><br />
 a. Ensure **PDB** and **Node Surge** settings are in place. For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3 <br /><br />
