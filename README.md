@@ -203,7 +203,14 @@ A mixed approach can also be considered where the lower environments can be conf
 Before the upgrade of any AKS Cluster on any environment, a mechanism of ensuring if the below minimum pre-requisites are met should be in place: <br /><br />
 a. Ensure **PDB** and **Node Surge** settings are in place. For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3 <br /><br />
 b. Ensure that the resource quota for the VMs of the NodePool is enough to cater to the **Node Surge**<br /><br />
-c. Ensure that the **IP address availability** is enough to cater to the **Node Surge** and **Pods Per Node** configurations -- Kubectl get nnc --? . More information here - https://learn.microsoft.com/en-us/azure/aks/azure-cni-overview#plan-ip-addressing-for-your-cluster <br /><br />
+c. Ensure that the **IP address availability** is enough to cater to the **Node Surge** and **Pods Per Node** configurations. More information here - https://learn.microsoft.com/en-us/azure/aks/azure-cni-overview#plan-ip-addressing-for-your-cluster <br /><br />
+If the AKS Cluster is making use of **Overlay OR Dynamic-IP-Allocation** mode, then one can make use of Node Network Configuration (NNC) by using the **kubectl get nnc** command to know the number of Pod IPs allocated per node. Example as below: <br />
+![kubectl get nnc](/images/nnc.png) <br /><br />
+More information on Azure CNI Overlay networking in AKS here - https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay <br />
+More information on Azure CNI networking for Dynamic IP allocation in AKS here - https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni-dynamic-ip-allocation <br /><br />
+Also to monitor **IP subnet usage** using a Workbook, the same can be done by using the Workbook by the name **Subnet IP Usage**. More information here - https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni-dynamic-ip-allocation#monitor-ip-subnet-usage <br /><br />
+
+
 d. If **AKS cluster-level Blue-Green** set-up is in place, ensure that the above mentioned pre-requsites are in-place for both the clusters - **Blue** and **Green** <br /><br />
 
 ### 3. Check for breaking changes  for every AKS Cluster
