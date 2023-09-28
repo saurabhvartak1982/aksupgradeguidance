@@ -33,7 +33,7 @@ For the detailed information, please refer to the **Kubernetes version support p
 
 ### b. Node Image Upgrades for the Data Plane Nodes
 This upgrade type is related to the Node Images in the AKS NodePools. New OS image is available almost every 1 week for the Linux OS and almost every 1 month for the Windows OS.<br /><br />
-![AKS Node Image version](/images/AKSNodeImageVersion.png) <br /><br />
+![AKS Node Image version](/images/AKSNodeImageVersion.png) <br />
 
 <b>An updated Node Image contains up-to-date OS security patches, kernel updates, Kubernetes security updates, newer versions of binaries like kubelet, and component version updates.</b><br /> More information on the Node Image Upgrades here - https://learn.microsoft.com/en-us/azure/aks/node-image-upgrade <br /><br />
 
