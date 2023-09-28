@@ -1,6 +1,6 @@
 # Azure Kubernetes Service Upgrade Guidance
 Azure Kubernetes Service (AKS) related upgrade is an activity which needs some good planning and a lot of considerations. It is one of the most important tasks that needs to be carried out amongst the other AKS-related Day-2 operations.<br /><br />
-The article discusses how the planning for Azure Kubernetes Service related upgrades can be done. <br /><br />
+The article discusses how the planning for Azure Kubernetes Service related upgrades can be done and what are the considerations that need to be thought of. <br /><br />
 The **first 5 sections** provide a quick primer as to what are the different concepts involved as far as Azure Kubernetes Service related upgrades are concerned.<br />
 **Section 6** gives a quick intro to the **AKS related Day-2 operations** and **section 7** tries to stitch together all these concepts and provides a point-of-view as to how the AKS Cluster upgrades can be planned and executed. <br />
 **Section 8** introduces an additional option of the Long Term Support (LTS) - not yet available <br /><br />
