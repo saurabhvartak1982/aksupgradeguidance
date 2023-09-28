@@ -96,7 +96,7 @@ One can also subscribe to the feeds - https://github.com/Azure/AKS/releases.atom
 Region-wise AKS Release and AKS Node Images status - https://releases.aks.azure.com/ . <br />
 
 **4. AKS events with Azure Event Grid** <br />
-AKS events can be subscribed to using the Azure Event Grid. One of the Event Type is **Microsoft.ContainerService.NewKubernetesVersionAvailable** which gets triggered when the list of available Kubernetes versions is updated. <br />
+AKS events can be subscribed to using the Azure Event Grid. One of the Event Type is **Microsoft.ContainerService.NewKubernetesVersionAvailable** which gets triggered when the list of available Kubernetes versions is updated. <br /><br />
 More information on the available event types for AKS here - https://learn.microsoft.com/en-us/azure/event-grid/event-schema-aks?tabs=event-grid-event-schema <br />
 More information on subscribing to the AKS events with Azure Event Grid here - https://learn.microsoft.com/en-us/azure/aks/quickstart-event-grid?tabs=azure-cli <br /><br />
 
@@ -177,7 +177,7 @@ Day-2 operations comprise of monitoring and maintenance operations of the AKS cl
 Basis the foundation mentioned in the sections 1 to 5 of this article, one of the approaches for carrying out the AKS related Day-2 operations can be as defined in the below sections:  
 
 ## 7. Point-of-view on the Day-2 set-up for AKS cluster upgrades 
-### 1. Cluster-wise and environment-wise planning of AKS Upgrades
+### Step-1. Cluster-wise and environment-wise planning of AKS Upgrades
 Below are the considerations for planning of the upgrades related to the AKS Clusters:<br /><br />
 a. The AKS Upgrades should be planned in a way that the clusters in the lower environments are upgraded first and subsequently the ones in the higher environments are upgraded.<br /><br />
 b. The upgrade planning should ensure that **ALL** the clusters in every environment are always in the supported versions' window at any point of time. Please refer to the Kubernetes version support policy here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
@@ -202,7 +202,7 @@ b. Risk appetite <br /><br />
 
 If the DevOps maturity is high and if there is a high risk appetite, then one can go with the automated upgrades for all the environments. Or else a more controlled approach of manual upgrades can be chosen.<br />
 A mixed approach can also be considered where the lower environments can be configured for auto-upgrades (to reduce manual effort) and the higher environments can be upgraded manually. <br /><br />
-### 2. Check for AKS cluster-related pre-requisites for every AKS cluster
+### Step-2. Check for AKS cluster-related pre-requisites for every AKS cluster
 Before the upgrade of any AKS Cluster on any environment, a mechanism of ensuring if the below minimum pre-requisites are met should be in place: <br /><br />
 a. Ensure **PDB** and **Node Surge** settings are in place. For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3 <br /><br />
 b. Ensure that the resource quota for the VMs of the NodePool is enough to cater to the **Node Surge**<br /><br />
@@ -216,15 +216,15 @@ Also to monitor **IP subnet usage** using a Workbook, the same can be done by us
 
 d. If **AKS cluster-level Blue-Green** set-up is in place, ensure that the above mentioned pre-requsites are in-place for both the clusters - **Blue** and **Green** <br /><br />
 
-### 3. Check for breaking changes  for every AKS Cluster
+### Step-3. Check for breaking changes  for every AKS Cluster
 Kubernetes upgrades - especially when the minor version upgrades - may result in breaking changes. The below steps should be carried out to check if there are any breaking changes: <br /><br />
 a. A quick initial check for any upgrade resulting in changes to the minor version by going through the document here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-components-breaking-changes-by-version <br /><br />
 b. <b>Kubernetes API Deprecations</b> view in the <b>Diagnostic Setting --> Create, Upgrade, Delete and Scale </b> of the AKS cluster page. Documentation link here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#remove-usage-of-deprecated-apis-recommended <br /><br />
 
-### 4. Upgrades of the AKS clusters in different environments basis the planning done as per section 7.1 of this article
+### Step-4. Upgrades of the AKS clusters in different environments basis the planning done as per section 7.1 of this article
 This is the step in which the actual execution of upgrades for the AKS Clusters take place. It is to be ensured that all the steps mentioned in sections 7.1, 7.2 and 7.3 are carried out for that particular cluster which is getting upgraded. <br /><br />
 
-### 5. Post-upgrade alert
+### Step-5. Post-upgrade alert
 For every AKS Cluster, an Azure Monitor alert should be set which informs when an AKS Cluster is upgraded. This is especially important when an automated upgrade method is employed to upgrade an AKS Cluster.  <br />
 A snapshot as to how an AKS-upgrade related Azure Monitor alert can be set is as below: <br /><br />
 ![AKS Azure Monitor Alert](/images/AKS_Azure_Monitor_Alert.png) <br /><br />
@@ -233,10 +233,10 @@ AKS events can also be used to know when an AKS Cluster has been upgraded. AKS e
 More information on the available event types for AKS here - https://learn.microsoft.com/en-us/azure/event-grid/event-schema-aks?tabs=event-grid-event-schema <br />
 More information on subscribing to the AKS events with Azure Event Grid here - https://learn.microsoft.com/en-us/azure/aks/quickstart-event-grid?tabs=azure-cli <br /><br />
 
-### 6. Post-upgrade update of the AKS_Cluster_Upgrade_Plan.xlsx
+### Step-6. Post-upgrade update of the AKS_Cluster_Upgrade_Plan.xlsx
 Whenever any AKS Cluster is upgraded, the AKS upgrade planner (**AKS_Cluster_Upgrade_Plan.xlsx** in our reference template example) should be updated with all the details. The AKS upgrades across all the environments should be properly tracked. <br /><br />
 
-### 7. Automated/Manual Sanity/Perf Testing post an upgrade -  basis the environment
+### Step-7. Automated/Manual Sanity/Perf Testing post an upgrade -  basis the environment
 Every AKS Cluster upgrade should be be followed by Sanity AND/OR Performance tests for all the applications which are hosted on that upgraded AKS Cluster. <br /><br />
 
 ## 8. LTS option (not yet available as of this writing)
