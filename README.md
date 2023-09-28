@@ -5,7 +5,7 @@ The **first 5 sections** provide a quick primer as to what are the different con
 **Section 8** introduces an additional option of the Long Term Support (LTS) - not yet available <br /><br />
 To prevent duplication, the article relies on the official AKS or Kubernetes documentation and mentions the references to the same, wherever applicable. <br /><br />
 
-**Kindly note - the approach depicted in this article is a personal point of view. Reader's discretion is advised** <br /><br />
+**Kindly note - the approach depicted in this article is a personal point of view. Reader's discretion is advised. Any approach decided should be properly tested on a test set-up.** <br /><br />
 
 ## 1. Kubernetes cluster logical diagram
 A Kubernetes cluster is logically divided into 2 parts: <br /><br />
@@ -57,7 +57,9 @@ Below is the sequence which is to be followed for NodePool-level Blue-Green set-
 a. Upgrade the Control Plane with the desired Kubernetes version.<br />
 b. Create a new NodePool (Green) with the upgraded Kubernetes version.<br />
 c. Cordon and drain the older NodePool (Blue). This action will move the workloads to the new NodePool (green).<br />
-d. Delete the older NodePool (Blue).<br />
+d. Delete the older NodePool (Blue).<br /><br />
+
+More information on Cordon + Drain of the AKS NodePool can be found here - https://learn.microsoft.com/en-us/azure/aks/resize-node-pool?tabs=azure-cli <br />
 
 ### b. Architecture patterns-based measures:
 **1. AKS Cluster-level Blue-Green set-up** <br />
@@ -204,7 +206,7 @@ Before the upgrade of any AKS Cluster on any environment, a mechanism of ensurin
 a. Ensure **PDB** and **Node Surge** settings are in place. For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3 <br /><br />
 b. Ensure that the resource quota for the VMs of the NodePool is enough to cater to the **Node Surge**<br /><br />
 c. Ensure that the **IP address availability** is enough to cater to the **Node Surge** and **Pods Per Node** configurations. More information here - https://learn.microsoft.com/en-us/azure/aks/azure-cni-overview#plan-ip-addressing-for-your-cluster <br /><br />
-If the AKS Cluster is making use of **Overlay OR Dynamic-IP-Allocation** mode, then one can make use of Node Network Configuration (NNC) by using the **kubectl get nnc** command to know the number of Pod IPs allocated per node. Example as below: <br />
+If the AKS Cluster is making use of **Overlay OR Dynamic-IP-Allocation** mode, then one can make use of **Node Network Configuration (NNC)** by using the **kubectl get nnc** command to know the number of Pod IPs allocated per node. Example as below: <br />
 ![kubectl get nnc](/images/nnc.png) <br /><br />
 More information on Azure CNI Overlay networking in AKS here - https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay <br />
 More information on Azure CNI networking for Dynamic IP allocation in AKS here - https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni-dynamic-ip-allocation <br /><br />
@@ -216,9 +218,7 @@ d. If **AKS cluster-level Blue-Green** set-up is in place, ensure that the above
 ### 3. Check for breaking changes  for every AKS Cluster
 Kubernetes upgrades - especially when the minor version upgrades - may result in breaking changes. The below steps should be carried out to check if there are any breaking changes: <br /><br />
 a. A quick initial check for any upgrade resulting in changes to the minor version by going through the document here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-components-breaking-changes-by-version <br /><br />
-b. Azure Advisor alerts informing about potential issues due to deprecated APIs - https://learn.microsoft.com/en-us/azure/advisor/advisor-overview -- ? <br /><br />
-c. <b>Kubernetes API Deprecations</b> view in the <b>Diagnostic Setting --> Create, Upgrade, Delete and Scale </b> of the AKS cluster page. Documentation link here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#remove-usage-of-deprecated-apis-recommended <br /><br />
-d. Raising an advisory support case with Microsoft -- ? <br /><br />
+b. <b>Kubernetes API Deprecations</b> view in the <b>Diagnostic Setting --> Create, Upgrade, Delete and Scale </b> of the AKS cluster page. Documentation link here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#remove-usage-of-deprecated-apis-recommended <br /><br />
 
 ### 4. Upgrades of the AKS clusters in different environments basis the planning done as per section 7.1 of this article
 This is the step in which the actual execution of upgrades for the AKS Clusters take place. It is to be ensured that all the steps mentioned in sections 7.1, 7.2 and 7.3 are carried out for that particular cluster which is getting upgraded. <br /><br />
