@@ -27,7 +27,7 @@ Here are the things that you will consider when preparing for an upgrade
 a. The AKS upgrades should be planned in a way that the clusters in the lower environments are upgraded first and subsequently the ones in the higher environments are upgraded.<br /><br />
 b. The upgrade planning should ensure that **ALL** the clusters in every environment are always in the supported versions' window at any point of time. Please refer to the Kubernetes version support policy here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
 c. The upgrade planning should ensure that any application is sanity/perf tested first on the upgraded lower environment before it's corresponding AKS Cluster on the higher environment is upgraded. <br /><br />
-d. The type of AKS Upgrade (manual/automated) should be clearly noted for better planning. <br /><br />
+d. The type of AKS upgrade (manual/automated), upgrade frequency and duration of the upgrades should always be considered for better planning. <br /><br />
 e. Sufficient time should be planned for the check on upgrade pre-requisites and a sufficient buffer should be planned for fixing the breaking changes - if any. <br /><br />
 f. Below are different modes which help in knowing the availability of the upcoming AKS versions which should be always referred for planning: <br />
 **f.1. AKS Kubernetes Release calendar** - To view the upcoming version releases - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar <br />
@@ -103,11 +103,31 @@ b. Risk appetite <br /><br />
 If the DevOps maturity is high and if there is a high risk appetite, then one can go with the automated upgrades for all the environments. Or else a more controlled approach of manual upgrades can be chosen.<br />
 A mixed approach can also be considered where the lower environments can be configured for auto-upgrades (to reduce manual effort) and the higher environments can be upgraded manually. <br /><br />
 <b>Very Important - Whichever approach is decided, it is important to ensure that the AKS Cluster is always running in the supported version and on one of the latest Node Images.</b> <br /><br />
-3. **Upgrade Frequency** - Stable, Rapid, Patch, etc. 
-Upgrade Duration - Node Surge, Node pool based upgrade, maintenance window, etc. 
+3. **Upgrade Frequency**<br />
+The **Control Plane** of the AKS Cluster is to be upgraded with a cadence such that it is always in the supported version. Irrespective of the upgrade method used (manual/automated), **at a minimum**, the upgrade plan should be **equivalent** to the **patch** channel defined for cluster auto-upgrade. Kindly note that the **patch** channel will not upgrade the **minor version**. So if a particular AKS Cluster configured with the **auto-upgrade channel** of type **patch** is on a particular **minor version** and if that **minor version** goes out of support, then the AKS Cluster will need to be upgraded to the next minor version **manually**.  <br /><br />
+Documentation link detailing the cluster auto-upgrade channels here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster#use-cluster-auto-upgrade <br /><br />
 
-
-Identify deprecated APIs and impact
+The **Data Plane** of the AKS Cluster is to be upgraded with a cadence such that its Node Pools are always running with the latest Node Image available for that particular AKS version. Irrespective of the upgrade method used (manual/automated), **at a minimum**, the upgrade plan should be **equivalent** to the **NodeImage** channel defined for cluster auto-upgrade. <br /><br />
+Documentation link detailing the node OS auto-upgrade channels here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-node-image#using-node-os-auto-upgrade <br /><br />
+4. **Upgrade Duration**<br />
+The upgrade duration of the Data Plane (NodePool) can be reduced by using the below 2 measures:<br /> 
+**4.a. Node Surge** <br />
+Node Surge setting indicates the buffer/extra Node(s) that are created during the upgrades - at the NodePool level. These extra Node(s) help in minimizing disruptions during the upgrades as well as to tune the upgrade speed. <br />
+Please refer to the section **Customize node surge upgrade** for guidance on this configuration here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#customize-node-surge-upgrade <br /><br />
+**4.b. NodePool-level Blue-Green set-up** <br />
+The primary driver behind having the NodePool-level Blue-Green set-up is to make the NodePool upgrades faster. <br /><br />
+Below is the sequence which is to be followed for NodePool-level Blue-Green set-up:<br />
+a. Upgrade the Control Plane with the desired Kubernetes version.<br />
+b. Create a new NodePool (Green) with the upgraded Kubernetes version.<br />
+c. Cordon and drain the older NodePool (Blue). This action will move the workloads to the new NodePool (green).<br />
+d. Delete the older NodePool (Blue).<br /><br />
+More information on Cordon + Drain of the AKS NodePool can be found here - https://learn.microsoft.com/en-us/azure/aks/resize-node-pool?tabs=azure-cli <br /><br />
+**5. Identify deprecated APIs and impact** <br />
+Kubernetes upgrades - especially when the minor version upgrades - may result in breaking changes. The below steps should be carried out to check if there are any breaking changes: <br />
+a. A quick initial check for any upgrade resulting in changes to the minor version by going through the document here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-components-breaking-changes-by-version <br /><br />
+b. <b>Kubernetes API Deprecations</b> view in the <b>Diagnostic Setting --> Create, Upgrade, Delete and Scale </b> of the AKS cluster page.<br />
+![AKS Breaking Changes](/images/AKSBreakingChanges.png) <br />
+Documentation link here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#remove-usage-of-deprecated-apis-recommended <br /><br />
 
 ## Execute the Upgrade
 When you are ready for executing the upgrades - please ensure the following things. 
