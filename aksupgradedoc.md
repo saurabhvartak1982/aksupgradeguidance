@@ -49,8 +49,13 @@ More info here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=a
 To facilitate better planning related to AKS upgrades, a sample upgrade plan can be created basis the reference template attached in the form of **AKS_Cluster_Upgrade_Plan.xlsx**. Below is the screenshot of the same: <br /><br />
 ![AKS Cluster Upgrade Plan](/images/AKS_Cluster_Upgrade_Plan.png) <br />
 
-2. **Upgrade Type** - Manual vs Automated
-An AKS can be updated by carrying out some **manual** steps and also in an **automated** way. Both the approaches are explained as below: <br /><br />
+2. **Upgrade Type**<br />
+There are 2 main categories of AKS-related upgrade types - **User Initiated Upgrade** and **Azure Initiated Upgrade**.<br />
+**User Intitiated Upgrades** are further classified into the below 3 types:<br />
+- **AKS version upgrade for the Control Plane and the Data Plane**: This upgrade type is related to the AKS versions in Control Plane and NodePools
+- **Node Image Upgrades for the Data Plane Nodes**: This upgrade type is related to the Node Images in the AKS NodePools. New OS image is available almost every 1 week for the Linux OS and almost every 1 month for the Windows OS. **An updated Node Image contains up-to-date OS security patches, kernel updates, Kubernetes security updates, newer versions of binaries like kubelet, and component version updates.**
+- **Node OS security and kernel updates for the Data Plane Nodes (Linux Nodes)**:This upgrade type is related to the OS security fixes or kernel updates for the Nodes in the AKS NodePool. The default value of this option is **None** - which means these patches wont be applied by default.<br /><br />
+The **User Intitiated Upgrades** can be carried out using some **manual** steps and also in an **automated** way. Both the approaches are explained as below: <br /><br />
 **2.a. Manual upgrade**<br />
 **2.a.1. AKS version upgrade for the Control Plane and the Data Plane**<br />
 **2.a.2. Node Image Upgrades for the Data Plane Nodes**<br />
