@@ -211,7 +211,7 @@ If the AKS Cluster is making use of **Overlay OR Dynamic-IP-Allocation** mode, t
 ![kubectl get nnc](/images/nnc.png) <br /><br />
 More information on Azure CNI Overlay networking in AKS here - https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay <br />
 More information on Azure CNI networking for Dynamic IP allocation in AKS here - https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni-dynamic-ip-allocation <br /><br />
-Also to monitor **IP subnet usage** using a Workbook, the same can be done by using the Workbook by the name **Subnet IP Usage**. More information here - https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni-dynamic-ip-allocation#monitor-ip-subnet-usage <br /><br />
+Also to monitor **IP subnet usage** using a Workbook for an AKS Cluster using **Dynamic-IP-Allocation mode**, the same can be done by using the Workbook by the name **Subnet IP Usage**. More information here - https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni-dynamic-ip-allocation#monitor-ip-subnet-usage <br /><br />
 
 
 d. If **AKS cluster-level Blue-Green** set-up is in place, ensure that the above mentioned pre-requsites are in-place for both the clusters - **Blue** and **Green** <br /><br />
