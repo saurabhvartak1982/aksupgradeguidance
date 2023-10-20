@@ -21,77 +21,85 @@ This guide is divided into three main sections as below: <br /><br />
 ..* - **Post Upgrade** - This section will be a set of steps to validate a successful upgrade as well as measure impact to your application. <br />
  
 ## Prepare for Upgrade
-Here are the things that you will consider when preparing for an upgrade
 
-1. **Upgrade Schedule and Propagation across Environments** - Cluster-wise and Environment-wise planning of AKS upgrades <br /><br />
-a. The AKS upgrades should be planned in a way that the clusters in the lower environments are upgraded first and subsequently the ones in the higher environments are upgraded.<br /><br />
-b. The upgrade planning should ensure that **ALL** the clusters in every environment are always in the supported versions' window at any point of time. Please refer to the Kubernetes version support policy here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
-c. The upgrade planning should ensure that any application is sanity/perf tested first on the upgraded lower environment before it's corresponding AKS Cluster on the higher environment is upgraded. <br /><br />
-d. The type of AKS upgrade (manual/automated), upgrade frequency and duration of the upgrades should always be considered for better planning. <br /><br />
-e. Sufficient time should be planned for the check on upgrade pre-requisites and a sufficient buffer should be planned for fixing the breaking changes - if any. <br /><br />
-f. Below are different modes which help in knowing the availability of the upcoming AKS versions which should be always referred for planning: <br />
-**f.1. AKS Kubernetes Release calendar** - To view the upcoming version releases - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar <br />
-**f.2. AKS Upgrade GitHub release page** - Announcements related to the planned date of a new version release and deprecation of the old version - https://github.com/Azure/AKS/releases <br />
-**f.3. AKS Release Tracker** - Region-wise AKS Release and AKS Node Images status - https://releases.aks.azure.com/ <br />
-**f.4. AKS events with Azure Event Grid** <br />
+AKS Upgrades are usually a very seamless affair. Due to the resiliency built inside of AKS, and the way AKS upgrade works, one can be assured of minimal impact to their applications during upgrades. However, there can be edge scenarios that may result in issues arising out of upgrades. Hence it is important that when you decide of your upgrade process - you will need to put some thoughts into how you will be executing the upgrades. Some of the decision criteia for performing upgrades are 
+
+### **Upgrade Type**<br />
+
+An AKS upgrade can happen in two manner - **User Initiated Upgrade** and **Azure Initiated Upgrade**.<br />
+
+#### User Initiated Upgrade
+A User Initiated Upgrade is preferred when the owner requires control of the upgrade operations and would want to put checks in place to avoid any unintentional impact due to upgrade. This can be done manually, step by step, or a user manually triggers a script/pipeline that will perform the upgrade. In either case, the user decides on 
+####* When to do the upgrade - Deciding on an upgrade window that has minimal impact on the application.  
+####* What steps to take before the upgrade - This could be scaling up the cluster and the application relicas to avoid any potential impact, or to turn off any alerts that get triggered due to application replica downtime, etc. 
+####* What steps to take after the upgrade - This could be performing regression testing, or scaling the cluster down, or turning on the alerts that were turned off, etc. 
+
+Azure provides the following tools for customers to perform User Initiated Upgrade
+##### AKS Kubernetes Release calendar - To view the upcoming version releases - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar <br />
+##### AKS Upgrade GitHub release page - Announcements related to the planned date of a new version release and deprecation of the old version - https://github.com/Azure/AKS/releases <br />
+##### AKS Release Tracker - Region-wise AKS Release and AKS Node Images status - https://releases.aks.azure.com/ <br />
+##### AKS events with Azure Event Grid <br />
 AKS events can be subscribed to using the Azure Event Grid. One of the Event Type is **Microsoft.ContainerService.NewKubernetesVersionAvailable** which gets triggered when the list of available Kubernetes versions is updated. <br />
 Available event types for AKS - https://learn.microsoft.com/en-us/azure/event-grid/event-schema-aks?tabs=event-grid-event-schema <br />
 Subscribing to the AKS events with Azure Event Grid - https://learn.microsoft.com/en-us/azure/aks/quickstart-event-grid?tabs=azure-cli <br />
-**f.5. az-cli** <br />
-**f.5.a. az aks get-upgrades** - for fetching the available upgrades for a particular AKS cluster. <br />
+##### az-cli <br />
+##### az aks get-upgrades - for fetching the available upgrades for a particular AKS cluster. <br />
 ![AKS Cluster Version Get Upgrades](/images/AKSClusterVersionGetUpgrades.png) <br />
 More info here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-get-upgrades <br />
-**f.5.b. az aks nodepool get-upgrades** - for fetching the available NodeImage upgrades for a particular NodePool. <br />
+##### az aks nodepool get-upgrades - for fetching the available NodeImage upgrades for a particular NodePool. <br />
 ![AKS NodePool Get Upgrades](/images/AKSNodeImageGetUpgrades.png) <br />
 More info here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br /><br />
 
+TIP: When doing manual upgrades - you can also upgrade only the control plane first using the """az aks upgrade --control-plane-only""" command, followed by upgrading each individual node-pool seperately. Doing this can ensure that you perform the upgrade process in a small, step by step and calculated manner. 
 
-To facilitate better planning related to AKS upgrades, a sample upgrade plan can be created basis the reference template attached in the form of **AKS_Cluster_Upgrade_Plan.xlsx**. Below is the screenshot of the same: <br /><br />
-![AKS Cluster Upgrade Plan](/images/AKS_Cluster_Upgrade_Plan.png) <br />
+One can also prepare a pipeline that can be triggered manually or automatically to perform AKS Upgrades. An example of a GitHub Action that can be used to process OS Updates for AKS is provided [https://learn.microsoft.com/en-us/azure/aks/node-upgrade-github-actions here]. The article shows  how one can automate the update process of AKS nodes using GitHub Actions and Azure CLI to create an update task based on cron that runs automatically.  
 
-2. **Upgrade Type**<br />
-There are 2 main categories of AKS-related upgrade types - **User Initiated Upgrade** and **Azure Initiated Upgrade**.<br />
-**User Intitiated Upgrades** are further classified into the below 3 types:<br />
-- **AKS version upgrade for the Control Plane and the Data Plane**: This upgrade type is related to the AKS versions in Control Plane and NodePools
-- **Node Image Upgrades for the Data Plane Nodes**: This upgrade type is related to the Node Images in the AKS NodePools. New OS image is available almost every 1 week for the Linux OS and almost every 1 month for the Windows OS. **An updated Node Image contains up-to-date OS security patches, kernel updates, Kubernetes security updates, newer versions of binaries like kubelet, and component version updates.**
-- **Node OS security and kernel updates for the Data Plane Nodes (Linux Nodes)**:This upgrade type is related to the OS security fixes or kernel updates for the Nodes in the AKS NodePool. The default value of this option is **None** - which means these patches wont be applied by default.<br /><br />
-The **User Intitiated Upgrades** can be carried out using some **manual** steps and also in an **automated** way. Both the approaches are explained as below: <br /><br />
-**2.a. Manual upgrade**<br />
-**2.a.1. AKS version upgrade for the Control Plane and the Data Plane**<br />
-**2.a.2. Node Image Upgrades for the Data Plane Nodes**<br />
-**2.b. Automated upgrade**<br />
-**2.b.a. Auto-upgrade channel + Planned Maintenance** <br />
-The **Auto-upgrade** feature enables you to automatically upgrade the Cluster/NodePool of an AKS Cluster. The same is achieved by configuring the desired auto-upgrade channel.<br /><br />
-**Type of Auto-upgrades**<br />
-<b>1. Cluster auto-upgrades</b> <br />
-Documentation link here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster <br /><br />
-<b>2. Node OS auto-upgrades</b> <br />
-Documentation link here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-node-image <br /><br />
-The **Planned Maintenance** feature enables you to schedule the auto-upgrades in a cadence of your choice so that the impact can be minimized. The scheduling of the auto-upgrades can be done at the below two levels: <br />
-<b>1. Scheduling of the auto-upgrades at the Cluster-level</b> <br />
-<b>2. Scheduling of the auto-upgrades at the NodePool-level</b> <br />
-Documentation link related to **Planned Maintenance** here - https://learn.microsoft.com/en-us/azure/aks/planned-maintenance <br /><br />
-**2.b.b. GitHub Actions OR Cron Jobs** <br />
-Automatic upgrades to the AKS clusters can also be automatically scheduled by using GitHub Actions or any other similar scheduling tool. <br />
-Documentation link here - https://learn.microsoft.com/en-us/azure/aks/node-upgrade-github-actions <br /><br />
-Selection of the upgrade type - Automated OR Manual depends primarily on the below 2 factors: <br />
-a. Maturity of the DevOps practices <br />
-b. Risk appetite <br /><br />
-If the DevOps maturity is high and if there is a high risk appetite, then one can go with the automated upgrades for all the environments. Or else a more controlled approach of manual upgrades can be chosen.<br />
-A mixed approach can also be considered where the lower environments can be configured for auto-upgrades (to reduce manual effort) and the higher environments can be upgraded manually. <br /><br />
-<b>Very Important - Whichever approach is decided, it is important to ensure that the AKS Cluster is always running in the supported version and on one of the latest Node Images.</b> <br /><br />
-3. **Upgrade Frequency**<br />
+#### Azure Initiated Upgrade
+
+AKS provides an out of the box automatic upgrade feature, whereby Azure can automatically check for version availability, and then trigger the update based on customer upgrade preferences. By enabling auto-upgrade, you can ensure your clusters are up to date and don’t miss the latest features or patches from AKS and upstream Kubernetes. With properly selected auto-upgrade channels, you can avoid clusters falling into an unsupported version.
+
+To enable automatic upgrades for your AKS cluster, you can use the Azure portal, Azure CLI, or Azure PowerShell. The auto-upgrade feature first upgrades the control plane, and then upgrades agent pools one by one. Stopped node pools will be upgraded during an auto-upgrade operation. The upgrade will apply to nodes when the node pool is started.
+
+It’s important to note that if you’re using cluster auto-upgrade, you can no longer upgrade the control plane only. 
+
+For more details on Auto Upgrades - please refer [https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster Automatic Upgrades in AKS]
+
+####* Auto-upgrade channel + Planned Maintenance
+AKS provides a feature called Planned Maintenance that allows you to schedule regular maintenance windows for your AKS cluster. This feature enables you to run both types of maintenance in a cadence of your choice, thereby minimizing any workload impact. 
+To use automatic upgrades with planned maintenance, you can specify a maintenance window for your cluster and enable the auto-upgrade feature. The upgrade will start during your specified maintenance window 
+For more information on using planned maintenance with AKS auto-upgrades, please refer to Microsoft’s official documentation [https://learn.microsoft.com/en-us/azure/aks/planned-maintenance]
+
+### Upgrade Frequency
+
+AKS follows the upstream kubernetes release cycle. A new minor version of kubernetes is released roughly every 4 months. This version will make its way to AKS roughly after 3-4 months after the upstream release.
+Referring to the Semantic Versioning convention of Major (X).Minor(Y).Patch(Z), new minor version in AKS is available almost every 3 - 4 months. Patch versions would usually come in at a higher frequency ~ 1 or more times within a month.
+
+Minor versions in the support window are the latest and the previous 2 versions -- Y, Y-1, Y-2.
+Each Minor version in the support window include 2 of the latest stable patch versions -- Z, Z-1.
+
+With Automatic Upgrades - Customer needs to decide on the channel to use - and Azure will upgrade your cluster to the appropriate minor/patch version. For more details on the channels - please refer [https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster#use-cluster-auto-upgrade Channels]
+
+TIP:
 The **Control Plane** of the AKS Cluster is to be upgraded with a cadence such that it is always in the supported version. Irrespective of the upgrade method used (manual/automated), **at a minimum**, the upgrade plan should be **equivalent** to the **patch** channel defined for cluster auto-upgrade. Kindly note that the **patch** channel will not upgrade the **minor version**. So if a particular AKS Cluster configured with the **auto-upgrade channel** of type **patch** is on a particular **minor version** and if that **minor version** goes out of support, then the AKS Cluster will need to be upgraded to the next minor version **manually**.  <br /><br />
-Documentation link detailing the cluster auto-upgrade channels here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster#use-cluster-auto-upgrade <br /><br />
 
 The **Data Plane** of the AKS Cluster is to be upgraded with a cadence such that its Node Pools are always running with the latest Node Image available for that particular AKS version. Irrespective of the upgrade method used (manual/automated), **at a minimum**, the upgrade plan should be **equivalent** to the **NodeImage** channel defined for cluster auto-upgrade. <br /><br />
 Documentation link detailing the node OS auto-upgrade channels here - https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-node-image#using-node-os-auto-upgrade <br /><br />
-4. **Upgrade Duration**<br />
-The upgrade duration of the Data Plane (NodePool) can be reduced by using the below 2 measures:<br /> 
-**4.a. Node Surge** <br />
-Node Surge setting indicates the buffer/extra Node(s) that are created during the upgrades - at the NodePool level. These extra Node(s) help in minimizing disruptions during the upgrades as well as to tune the upgrade speed. <br />
-Please refer to the section **Customize node surge upgrade** for guidance on this configuration here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#customize-node-surge-upgrade <br /><br />
-**4.b. NodePool-level Blue-Green set-up** <br />
+
+### Upgrade Duration
+An AKS Upgrade process always uses the cordon and drain process to ensure minimum disruptions to your applications during an upgrade. 
+The **cordon command** marks a node as unschedulable, which means that no new pods will be scheduled on that node. However, existing pods will continue to run on the node until they are terminated 1.
+
+The **drain command** is used to gracefully terminate all running pods on a node before the node is taken offline for maintenance or upgrade. The drain command ensures that all running pods are rescheduled onto other nodes in the cluster before the node is taken offline.
+Due to this process, the duration of an AKS cluster upgrade depends on several factors, including the size of the cluster, the number of nodes, the number of applications running on the cluster, and the complexity of the applications. Lets understand how to configure each of them appropriately
+
+#### Node Surge 
+Node Surge setting indicates the buffer/extra Node(s) that are created during the upgrades - at the NodePool level so that more nodes can be marked for upgrades. These extra Node(s) help in minimizing disruptions during the upgrades as well as to tune the upgrade speed. <br />
+Please refer to the section **Customize node surge upgrade** for guidance on this configuration here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#customize-node-surge-upgrade <br />
+
+#### Scheduling Contraints
+Things such as Node Selectors, Taints and Tolerations, Pod Disruption Budgets will elongate the process of node cordon and draining before performing an upgrade. 
+
+#### NodePool-level Blue-Green set-up
 The primary driver behind having the NodePool-level Blue-Green set-up is to make the NodePool upgrades faster. <br /><br />
 Below is the sequence which is to be followed for NodePool-level Blue-Green set-up:<br />
 a. Upgrade the Control Plane with the desired Kubernetes version.<br />
@@ -99,7 +107,19 @@ b. Create a new NodePool (Green) with the upgraded Kubernetes version.<br />
 c. Cordon and drain the older NodePool (Blue). This action will move the workloads to the new NodePool (green).<br />
 d. Delete the older NodePool (Blue).<br /><br />
 More information on Cordon + Drain of the AKS NodePool can be found here - https://learn.microsoft.com/en-us/azure/aks/resize-node-pool?tabs=azure-cli <br /><br />
-**5. Identify deprecated APIs and impact** <br />
+
+### Propogation Across Environments
+a. The AKS upgrades should be planned in a way that the clusters in the lower environments are upgraded first and subsequently the ones in the higher environments are upgraded.<br /><br />
+b. The upgrade planning should ensure that **ALL** the clusters in every environment are always in the supported versions' window at any point of time. Please refer to the Kubernetes version support policy here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
+c. The upgrade planning should ensure that any application is sanity/perf tested first on the upgraded lower environment before it's corresponding AKS Cluster on the higher environment is upgraded. <br /><br />
+d. The type of AKS upgrade (manual/automated), upgrade frequency and duration of the upgrades should always be considered for better planning. <br /><br />
+e. Sufficient time should be planned for the check on upgrade pre-requisites and a sufficient buffer should be planned for fixing the breaking changes - if any. <br /><br />
+
+To facilitate better planning related to AKS upgrades, a sample upgrade plan can be created basis the reference template attached in the form of **AKS_Cluster_Upgrade_Plan.xlsx**. Below is the screenshot of the same: <br /><br />
+![AKS Cluster Upgrade Plan](/images/AKS_Cluster_Upgrade_Plan.png) <br />
+
+
+**TODO - REVIEW 5. Identify deprecated APIs and impact** <br />
 Kubernetes upgrades - especially when the minor version upgrades - may result in breaking changes. The below steps should be carried out to check if there are any breaking changes: <br />
 a. A quick initial check for any upgrade resulting in changes to the minor version by going through the document here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-components-breaking-changes-by-version <br /><br />
 b. <b>Kubernetes API Deprecations</b> view in the <b>Diagnostic Setting --> Create, Upgrade, Delete and Scale </b> of the AKS cluster page.<br />
@@ -107,29 +127,38 @@ b. <b>Kubernetes API Deprecations</b> view in the <b>Diagnostic Setting --> Crea
 Documentation link here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#remove-usage-of-deprecated-apis-recommended <br /><br />
 
 ## Execute the Upgrade
-When you are ready for executing the upgrades - please ensure the following things. 
+Once the Planning is done - and you are now ready to exucute the upgrade (manually or automatic) - here are some best practices and guidance for executing an AKS upgrade.  
 
 ### Pre-Upgrade Validation 
-- IP addresses availability - Azure CNI
-Ensure that the **IP address availability** is enough to cater to the **Node Surge** and **Pods Per Node** configurations. More information here - https://learn.microsoft.com/en-us/azure/aks/azure-cni-overview#plan-ip-addressing-for-your-cluster <br /><br />
+
+#### Underlying Azure Resources
+
+##### Networking
+As we have seen during the planning process - an upgrade process will end up creating new nodes (or nodepools). One will need to ensure that the **IP address availability** in your Azure subnet is enough to cater to the **Node Surge** and **Pods Per Node** configurations, depending on the CNI that you have used. For example, in case of Azure CNI - how to plan for your IP addresses that will also take into account upgrade process is provided here [https://learn.microsoft.com/en-us/azure/aks/azure-cni-overview#plan-ip-addressing-for-your-cluster Plan IP Addressing]
+
+TIP
 If the AKS Cluster is making use of **Overlay OR Dynamic-IP-Allocation** mode, then one can make use of **Node Network Configuration (NNC)** by using the **kubectl get nnc** command to know the number of Pod IPs allocated per node. Example as below: <br />
 ![kubectl get nnc](/images/nnc.png) <br /><br />
+
 More information on Azure CNI Overlay networking in AKS here - https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay <br />
 More information on Azure CNI networking for Dynamic IP allocation in AKS here - https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni-dynamic-ip-allocation <br /><br />
-Also to monitor **IP subnet usage** using a Workbook for an AKS Cluster using **Dynamic-IP-Allocation mode**, the same can be done by using the Workbook by the name **Subnet IP Usage**. More information here - https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni-dynamic-ip-allocation#monitor-ip-subnet-usage <br /><br />
-- Resource quota availability
+
+TIP: Monitoring IP exhaustion can become difficult. Azure provides a Workbook by the name **Subnet IP Usage**, which can help in monitoring IP Subnet Address Usage.  More information here - https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni-dynamic-ip-allocation#monitor-ip-subnet-usage <br /><br />
+
+##### Resource quota
 Ensure that the resource quota for the VMs of the NodePool is enough to cater to the configured value of **Node Surge**<br /><br />
-- Pod Resiliency and placement
+
+#### Application Pods
+
+##### Pod Resiliency and placement
 Pod Disruption Budget allows a control over how many pods can be down at the same time during voluntary disruptions - like an upgrade process.
 More information on Pod Disruption Budgets can be found here - https://kubernetes.io/docs/tasks/run-application/configure-pdb/ <br /><br />
+
+TIP: For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3 <br /><br />
+
 - Stateful Sets --**??**
-For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3 <br /><br />
-- Downtime
-Kubernetes/AKS Upgrades can be disruptive. To minimize the disruptions, certain measures can be put in place as below: <br />
-**1. Node Surge** <br />
-**2. Pod Disruption Budget (PDB)** <br />
-**3. NodePool-level Blue-Green set-up**<br />
-**4. AKS Cluster-level Blue-Green set-up** <br />
+
+##### AKS Cluster-level Blue-Green set-up** <br />
 AKS Cluster-level Blue-Green set-up is the safest option to perform the AKS upgrades. This option gives a better ability to validate the functioning of the applications post an upgrade and it also provides an easy way to perform the roll-back. This option is may prove expensive - cost wise. <br /><br />
 ![AKS Blue-Green set-up](/images/AKSBlueGreen.png) <br />
 Diagram courtesy - https://learn.microsoft.com/en-us/azure/architecture/guide/aks/blue-green-deployment-for-aks#architecture<br />
@@ -149,51 +178,18 @@ If an active-active set-up of AKS Clusters is not desired and only one AKS Clust
 
 A reference article on the Blue-Green deployment of AKS Clusters can be found here - https://learn.microsoft.com/en-us/azure/architecture/guide/aks/blue-green-deployment-for-aks <br /><br />
 
-### Upgrade Steps 
-
-#### Manual
-
-- Downtime 
-- Commands
-**a. AKS version upgrade for the Control Plane and the Data Plane** - The broader steps involved in the **manual** upgrade are as below: <br />
-<b>a. Check for available versions</b> <br />
-`az aks get-upgrades --resource-group <ResourceGroupName> --name <AKSClusterName> --output table` <br />
-Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-upgrade <br />
-<b>b. Check for the Kubernetes versions of the Nodes in the NodePools</b> <br />
-`az aks nodepool list --resource-group <ResourceGroupName> --cluster-name <AKSClusterName> --query "[].{Name:name,k8version:orchestratorVersion}" --output table` <br />
-Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-list <br />
-<b>c. Upgrade the Control Plane</b> <br />
-`az aks upgrade --resource-group <ResourceGroupName> --name <AKSClusterName> --control-plane-only --no-wait --kubernetes-version <KubernetesVersion>` <br />
-Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-upgrade  <br />
-<b>d. Upgrade the Data Plane</b> <br />
-`az aks nodepool upgrade --resource-group <ResourceGroupName> --cluster-name <AKSClusterName> --name <NodePoolName> --no-wait --kubernetes-version <KubernetesVersion>` <br />
-Upgrade one NodePool at a time <br />
-Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-upgrade <br />
-<b>e. View the upgrade events</b> <br />
-`kubectl get events` <br />
-**b. Node Image Upgrades for the Data Plane Nodes**. The broader steps involved in the **manual** upgrade are as below: <br />
-<b>a. Check for the available Node Images for a NodePool</b> <br />
-`az aks nodepool get-upgrades --resource-group MyResourceGroup --cluster-name MyManagedCluster --nodepool-name MyNodePool` <br />
-Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br />
-<b>b. Upgrade the Node Image of the NodePool</b> <br />
-`az aks nodepool upgrade --cluster-name --name --resource-group --node-image-only` <br />
-Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-upgrade <br />
-<b>c. Verify the Node Image version of the NodePool </b> <br />
-`az aks nodepool show --cluster-name --name --resource-group` <br />
-Documentation link here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-show <br /><br />
-
-
-- Monitor
-- App changes deployment
-
-#### Automated 
-
-- Downtime
-- Monitor
-- App changes deployment
-
 ## Post Upgrade
-When you are ready for executing the upgrades - please ensure the following things. 
+After an AKS upgrade has completed, it’s important to perform a series of checks to ensure that your workloads are running as expected and that there are no issues with the upgraded cluster 1. Here is a checklist of things to check after an AKS upgrade:
+
+Verify that all nodes in the cluster are running the expected version of Kubernetes.
+Check that all pods are running as expected and that there are no issues with any of the workloads.
+Verify that all services are running as expected and that there are no issues with any of the services.
+Check that all ingress controllers are running as expected and that there are no issues with any of the ingress controllers.
+Verify that all persistent volumes (PVs) and persistent volume claims (PVCs) are working as expected.
+Check that all custom resource definitions (CRDs) are working as expected.
+Verify that all Kubernetes add-ons (such as metrics-server, dashboard, etc.) are working as expected.
+Check that all Kubernetes API objects (such as deployments, statefulsets, etc.) are working as expected.
+It’s important to note that this is not an exhaustive list, and you may need to perform additional checks depending on your specific use case 1.
 
 ### Checks
 - Version Checks
@@ -203,14 +199,19 @@ When you are ready for executing the upgrades - please ensure the following thin
 Reference documentation here - https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli <br /><br />  
 - Application Health Checks
 
+### Monitor the Upgrade
+
+#### Upgrade Events
+AKS provides a detailed set of events that you can use to monitor the progress of the AKS upgrade. These are documented here [https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#view-the-upgrade-events Upgrade Events]
+
+#### Stopped Upgrade Operations
+AKS automatically stops upgrade operations consisting of a minor version change if deprecated APIs are detected an error is generated. After receiving the error message, you have two options to mitigate the issue. You can either remove usage of deprecated APIs (recommended) or bypass validation to ignore API changes. To Bypass validation to ignore API breaking changes, use the az aks update command, specifying enable-force-upgrade, and setting the upgrade-override-until property to define the end of the window during which validation is bypassed. If no value is set, it defaults the window to three days from the current time. 
+
+Please refer to official documentation here [https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#stop-cluster-upgrades-automatically-on-api-breaking-changes Stop Upgrades]
+
 ### Troubleshoot Upgrade Failures
 Please refer to the links in the section **Troubleshoot upgrade operations** in the document - https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/welcome-azure-kubernetes <br />
 - Control Plane Upgrade failure
 - Node failure
 - Application pod failure
-
-### Propogation to next environment
-
-- Maintenance Schedule
-- Infra As Code changes 
 
