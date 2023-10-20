@@ -156,7 +156,11 @@ More information on Pod Disruption Budgets can be found here - https://kubernete
 
 TIP: For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3 <br /><br />
 
-- Stateful Sets --**??**
+##### Stateful Sets
+Applications that have state stored in them, through PVCs have to be slightly careful during upgrades. Stateful sets are used to maintain the state of applications beyond an individual pod lifecycle. Therefore, it’s important to ensure that any data stored in the stateful set is backed up before upgrading the cluster. Backup can be of the following types
+a. Workload initiated backups (Recommended) - Depending on the workload that you have, there would be a native way of backing up data of the workload. It is recommended to use native way as that would ensure consistency with the application
+
+b. Azure Kubernetes Service Backup -  is a simple, cloud-native process to back up and restore the containerized applications and data running in AKS clusters. You can configure scheduled backup for cluster state and application data (persistent volumes - CSI driver-based Azure Disks). The solution provides granular control to choose a specific namespace or an entire cluster to back up or restore by storing backups locally in a blob container and as disk snapshots. With AKS backup, you can unlock end-to-end scenarios - operational recovery, cloning developer/test environments, or cluster upgrade scenarios. For more details  https://learn.microsoft.com/en-us/azure/backup/azure-kubernetes-service-backup-overview
 
 ##### AKS Cluster-level Blue-Green set-up** <br />
 AKS Cluster-level Blue-Green set-up is the safest option to perform the AKS upgrades. This option gives a better ability to validate the functioning of the applications post an upgrade and it also provides an easy way to perform the roll-back. This option is may prove expensive - cost wise. <br /><br />
