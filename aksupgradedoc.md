@@ -24,7 +24,7 @@ This guide is divided into three main sections as below: <br /><br />
 
 AKS Upgrades are usually a very seamless affair. Due to the resiliency built inside of AKS, and the way AKS upgrade works, one can be assured of minimal impact to their applications during upgrades. However, there can be edge scenarios that may result in issues arising out of upgrades. Hence it is important that when you decide of your upgrade process - you will need to put some thoughts into how you will be executing the upgrades. Some of the decision criteia for performing upgrades are 
 
-### **Upgrade Type**<br />
+### Upgrade Type
 
 An AKS upgrade can happen in two manner - **User Initiated Upgrade** and **Azure Initiated Upgrade**.<br />
 
@@ -148,7 +148,7 @@ TIP: Monitoring IP exhaustion can become difficult. Azure provides a Workbook by
 ##### Resource quota
 Ensure that the resource quota for the VMs of the NodePool is enough to cater to the configured value of **Node Surge**<br /><br />
 
-#### Application Pods
+#### Application Related Considerations
 
 ##### Pod Resiliency and placement
 Pod Disruption Budget allows a control over how many pods can be down at the same time during voluntary disruptions - like an upgrade process.
@@ -162,25 +162,10 @@ a. Workload initiated backups (Recommended) - Depending on the workload that you
 
 b. Azure Kubernetes Service Backup -  is a simple, cloud-native process to back up and restore the containerized applications and data running in AKS clusters. You can configure scheduled backup for cluster state and application data (persistent volumes - CSI driver-based Azure Disks). The solution provides granular control to choose a specific namespace or an entire cluster to back up or restore by storing backups locally in a blob container and as disk snapshots. With AKS backup, you can unlock end-to-end scenarios - operational recovery, cloning developer/test environments, or cluster upgrade scenarios. For more details  https://learn.microsoft.com/en-us/azure/backup/azure-kubernetes-service-backup-overview
 
-##### AKS Cluster-level Blue-Green set-up** <br />
-AKS Cluster-level Blue-Green set-up is the safest option to perform the AKS upgrades. This option gives a better ability to validate the functioning of the applications post an upgrade and it also provides an easy way to perform the roll-back. This option is may prove expensive - cost wise. <br /><br />
-![AKS Blue-Green set-up](/images/AKSBlueGreen.png) <br />
-Diagram courtesy - https://learn.microsoft.com/en-us/azure/architecture/guide/aks/blue-green-deployment-for-aks#architecture<br />
+#### Additional Considerations
 
-Below is the sequence which is to be followed **(one of the many ways)**:<br /><br />
-a. Have an AKS Cluster-level Blue-Green set-up in-place. Essentially, it is 2 AKS Clusters (one Blue and one Green) both sitting behind a single L7 load balancer like an Azure Application Gateway or an Azure Front Door. I am assuming there is an active-active set-up of AKS Clusters such that both the clusters service the requests.<br /><br />
-b. Turn off the traffic flowing to the Green AKS Cluster. <br /><br />
-c. Upgrade the Green AKS Cluster to the higher version of Kubernetes.<br /><br />
-d. Sanity test the Green AKS Cluster.<br /><br />
-e. Allow the traffic to flow to the Green AKS Cluster.<br /><br />
-f. Turn off the traffic flowing to the Blue AKS Cluster.<br /><br />
-g. Upgrade the Blue AKS Cluster to the higher version of Kubernetes.<br /><br />
-h. Sanity test the Blue AKS Cluster.<br /><br />
-i. Allow the traffic to flow to the Blue AKS Cluster.<br /><br />
-
-If an active-active set-up of AKS Clusters is not desired and only one AKS Cluster is to be serving the requests, then the Blue cluster can either be deleted OR can be upgraded and scaled down so that it can be re-purposed as a Green AKS Cluster for the next upgrade.<br /><br />
-
-A reference article on the Blue-Green deployment of AKS Clusters can be found here - https://learn.microsoft.com/en-us/azure/architecture/guide/aks/blue-green-deployment-for-aks <br /><br />
+##### Availability Zones
+In case you have your AKS clusters that are spread across availability zones - there are some things to keep in mind. We have them documented here. https://learn.microsoft.com/en-us/azure/aks/upgrade-cluster?tabs=azure-cli#special-considerations-for-node-pools-that-span-multiple-availability-zones 
 
 ## Post Upgrade
 After an AKS upgrade has completed, it’s important to perform a series of checks to ensure that your workloads are running as expected and that there are no issues with the upgraded cluster 1. Here is a checklist of things to check after an AKS upgrade:
@@ -219,3 +204,22 @@ Please refer to the links in the section **Troubleshoot upgrade operations** in 
 - Node failure
 - Application pod failure
 
+## AKS Cluster-level Blue-Green set-up** <br />
+AKS Cluster-level Blue-Green set-up is the safest option to perform the AKS upgrades. This option gives a better ability to validate the functioning of the applications post an upgrade and it also provides an easy way to perform the roll-back. This option may prove expensive from a cost perspective. <br /><br />
+![AKS Blue-Green set-up](/images/AKSBlueGreen.png) <br />
+Diagram courtesy - https://learn.microsoft.com/en-us/azure/architecture/guide/aks/blue-green-deployment-for-aks#architecture<br />
+
+Below is the sequence which is to be followed **(one of the many ways)**:<br /><br />
+a. Have an AKS Cluster-level Blue-Green set-up in-place. Essentially, it is 2 AKS Clusters (one Blue and one Green) both sitting behind a single L7 load balancer like an Azure Application Gateway or an Azure Front Door. I am assuming there is an active-active set-up of AKS Clusters such that both the clusters service the requests.<br /><br />
+b. Turn off the traffic flowing to the Green AKS Cluster. <br /><br />
+c. Upgrade the Green AKS Cluster to the higher version of Kubernetes.<br /><br />
+d. Sanity test the Green AKS Cluster.<br /><br />
+e. Allow the traffic to flow to the Green AKS Cluster.<br /><br />
+f. Turn off the traffic flowing to the Blue AKS Cluster.<br /><br />
+g. Upgrade the Blue AKS Cluster to the higher version of Kubernetes.<br /><br />
+h. Sanity test the Blue AKS Cluster.<br /><br />
+i. Allow the traffic to flow to the Blue AKS Cluster.<br /><br />
+
+If an active-active set-up of AKS Clusters is not desired and only one AKS Cluster is to be serving the requests, then the Blue cluster can either be deleted OR can be upgraded and scaled down so that it can be re-purposed as a Green AKS Cluster for the next upgrade.<br /><br />
+
+A reference article on the Blue-Green deployment of AKS Clusters can be found here - https://learn.microsoft.com/en-us/azure/architecture/guide/aks/blue-green-deployment-for-aks <br /><br />
