@@ -183,7 +183,8 @@ As we have seen during the planning process - an upgrade process will end up cre
 
 > [!NOTE]
 > If the AKS Cluster is making use of **Overlay OR Dynamic-IP-Allocation** mode, then one can make use of **Node Network Configuration (NNC)** by using the **kubectl get nnc** command to know the number of Pod IPs allocated per node. Example as below: <br />
-> ![kubectl get nnc](/images/nnc.png) <br /><br />
+
+![kubectl get nnc](/images/nnc.png) <br /><br />
 
 > [!NOTE]
 > More information on Azure CNI Overlay networking in AKS here - https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay <br />
