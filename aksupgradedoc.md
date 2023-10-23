@@ -36,7 +36,7 @@ This upgrade type is related to the AKS versions in Control Plane and NodePools.
 </b> Control Plane upgrade includes the System Pods running on Nodes as well.<br /><br />
 AKS follows the upstream kubernetes release cycle. A new minor version of kubernetes is released roughly every 4 months. This version will make its way to AKS roughly after 3-4 months after the upstream release.  
 Referring to the Semantic Versioning convention of **Major (X).Minor(Y).Patch(Z)**, new minor version in AKS is available almost every 3 - 4 months. Patch versions usually come in the frequency of 1 month or a few times within a month. <br />
-Minor versions in the support window are the latest and the previous 2 versions -- **Y, Y-1, Y-2**. There is also an **LTS** option which would be available shortly.  <br />
+Minor versions in the support window are the latest and the previous 2 versions -- **Y, Y-1, Y-2**. There is also an **LTS** option which offers longer-term support for some additional period.  <br />
 Each Minor version in the support window include 2 of the latest stable patch versions -- **Z, Z-1**. <br /><br />
 For the detailed information, please refer to the **Kubernetes version support policy** section at - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
 
@@ -50,11 +50,11 @@ This upgrade type is related to the Node Images in the AKS NodePools. New OS ima
 This upgrade type is related to the OS security fixes or kernel updates for the Nodes in the AKS NodePool. Some of these updates require a node reboot to complete the process. AKS doesn't automatically reboot these Linux nodes to complete the update process. Open-source solutions like KURED to manage the auto-reboot of a particular Node. More information on KURED here - https://github.com/kubereboot/kured <br />
 More information on the Node OS security and kernel updates here - https://learn.microsoft.com/en-us/azure/aks/node-updates-kured <br /> <br />
 
-Generally, the type of upgrade will determine the frequency of upgrade operations, and any complexity that arises during the upgrade. When you need to upgrade either of the resources - the process will be similar. Irrespective of the type of upgrade - we recommend that you follow the following sections in order to upgrade of your kubnernetes clusters
+Generally, the type of upgrade will determine the frequency of upgrade operations, and any complexity that arises during the upgrade. When you need to upgrade either of the resources - the process will be similar. Irrespective of the type of upgrade - we recommend that you follow the following sections in order to upgrade of your AKS clusters.
  
 ## Prepare for Upgrade
 
-AKS upgrades are usually a very seamless affair. Due to the resiliency built inside of AKS, and the way AKS upgrade works, one can be assured of minimal impact to their applications during upgrades. However, there can be edge scenarios that may result in issues arising out of upgrades. Hence it is important that when you decide of your upgrade process - you will need to put some thoughts into how you will be executing the upgrades. Some of the decision criteria for performing upgrades are - 
+AKS upgrades are usually a very seamless affair. Due to the resiliency built inside of AKS and the way AKS upgrade works, one can be assured of minimal impact to their applications during upgrades. However, there can be edge scenarios that may result in issues arising out of upgrades. Hence it is important that when you decide of your upgrade process - you will need to put some thoughts into how you will be executing the upgrades. Some of the decision criteria for performing upgrades are - 
 
 ### Upgrade Type
 
@@ -76,10 +76,10 @@ Subscribing to the AKS events with Azure Event Grid - https://learn.microsoft.co
 * **az-cli** - 
 The Azure command line provides commands to manually trigger an upgrade using the az aks commandset. 
 
-* **az aks get-upgrades** - For fetching the available upgrades for a particular AKS cluster
+**az aks get-upgrades** - For fetching the available upgrades for a particular AKS cluster
 ![AKS Cluster Version Get Upgrades](/images/AKSClusterVersionGetUpgrades.png) <br />
 More info here - https://learn.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-get-upgrades <br />
-* **az aks nodepool get-upgrades** - For fetching the available NodeImage upgrades for a particular NodePool
+**az aks nodepool get-upgrades** - For fetching the available NodeImage upgrades for a particular NodePool
 ![AKS NodePool Get Upgrades](/images/AKSNodeImageGetUpgrades.png) <br />
 More info here - https://learn.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az-aks-nodepool-get-upgrades <br />
 
