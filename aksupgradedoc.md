@@ -282,7 +282,7 @@ A reference article on the Blue-Green deployment of AKS Clusters can be found he
 **Co-author:** <br />
 Yusuf Rangwala (https://github.com/whereisyusuf) <br /><br />
 
-**Thank you for valuable inputs**: <br />
+**Thank you for valuable inputs:** <br />
 Chetan Vaja (https://github.com/chetanv-code) <br />
 Amruta Deshpande (https://github.com/amruta53) <br /><br />
 
