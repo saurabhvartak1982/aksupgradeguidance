@@ -36,7 +36,7 @@ This upgrade type is related to the AKS versions in Control Plane and NodePools.
 </b> Control Plane upgrade includes the System Pods running on Nodes as well.<br /><br />
 AKS follows the upstream kubernetes release cycle. A new minor version of kubernetes is released roughly every 4 months. This version will make its way to AKS roughly after 3-4 months after the upstream release.  
 Referring to the Semantic Versioning convention of **Major (X).Minor(Y).Patch(Z)**, new minor version in AKS is available almost every 3 - 4 months. Patch versions usually come in the frequency of 1 month or a few times within a month. <br />
-Minor versions in the support window are the latest and the previous 2 versions -- **Y, Y-1, Y-2**. <br />
+Minor versions in the support window are the latest and the previous 2 versions -- **Y, Y-1, Y-2**. There is also an **LTS** option which would be available shortly.  <br />
 Each Minor version in the support window include 2 of the latest stable patch versions -- **Z, Z-1**. <br /><br />
 For the detailed information, please refer to the **Kubernetes version support policy** section at - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy <br /><br />
 
@@ -50,13 +50,10 @@ This upgrade type is related to the Node Images in the AKS NodePools. New OS ima
 This upgrade type is related to the OS security fixes or kernel updates for the Nodes in the AKS NodePool. Some of these updates require a node reboot to complete the process. AKS doesn't automatically reboot these Linux nodes to complete the update process. Open-source solutions like KURED to manage the auto-reboot of a particular Node. More information on KURED here - https://github.com/kubereboot/kured <br />
 More information on the Node OS security and kernel updates here - https://learn.microsoft.com/en-us/azure/aks/node-updates-kured <br /> <br />
 
-#### d. LTS option (not yet available as of this writing) --??????
-More information here - https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#long-term-support-lts <br /><br />
-
 This guide is divided into three main sections as below: <br /><br />
-..* - **Prepare for Upgrade** - This section will involve guidance around planning for the AKS upgrade. <br />
-..* - **Execute the Upgrade** - This section will be the list of things to consider when upgrading. <br />
-..* - **Post Upgrade** - This section will be a set of steps to validate a successful upgrade as well as measure impact to your application. <br />
+- **[Prepare for Upgrade](#Prepare-for-Upgrade)** - This section will involve guidance around planning for the AKS upgrade. <br />
+- **[Execute the Upgrade](#Execute-the-Upgrade)** - This section will be the list of things to consider when upgrading. <br />
+- **[Post Upgrade](#Post-Upgrade)** - This section will be a set of steps to validate a successful upgrade as well as measure impact to your application. <br />
  
 ## Prepare for Upgrade
 
