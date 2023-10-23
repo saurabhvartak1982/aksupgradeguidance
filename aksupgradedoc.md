@@ -106,7 +106,7 @@ It’s important to note that if you’re using cluster auto-upgrade, you can no
 For more details on Auto Upgrades - please refer [https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster Automatic Upgrades in AKS]
 
 * **Auto-upgrade channel + Planned Maintenance**
-AKS provides a feature called Planned Maintenance that allows you to schedule regular maintenance windows for your AKS cluster. This feature enables you to run both types of maintenance (Control Plane and Data Plabe) in a cadence of your choice, thereby minimizing any workload impact. 
+AKS provides a feature called Planned Maintenance that allows you to schedule regular maintenance windows for your AKS cluster. This feature enables you to run both types of maintenance (Control Plane and Data Plane) in a cadence of your choice, thereby minimizing any workload impact. 
 To use automatic upgrades with planned maintenance, you can specify a maintenance window for your cluster and enable the auto-upgrade feature. The upgrade will start during your specified maintenance window. 
 For more information on using planned maintenance with AKS auto-upgrades, please refer to Microsoft’s official documentation [https://learn.microsoft.com/en-us/azure/aks/planned-maintenance]
 
@@ -203,14 +203,14 @@ Pod Disruption Budget allows a control over how many pods can be down at the sam
 More information on Pod Disruption Budgets can be found here - https://kubernetes.io/docs/tasks/run-application/configure-pdb/ <br /><br />
 
 > [!NOTE]
-> For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3 <br /><br />
+> For Zone-redundant Nodepools ensure that Node Surge is in the multiples of 3. <br /><br />
 
 ##### Stateful Sets
 Applications that have state stored in them, through PVCs have to be slightly careful during upgrades. Stateful sets are used to maintain the state of applications beyond an individual pod lifecycle. Therefore, it’s important to ensure that any data stored in the stateful set is backed up before upgrading the cluster. Backup can be of the following types:
 
 a. Workload initiated backups (Recommended) - Depending on the workload that you have, there would be a native way of backing up data of the workload. It is recommended to use native way as that would ensure consistency with the application
 
-b. Azure Kubernetes Service Backup -  is a simple, cloud-native process to back up and restore the containerized applications and data running in AKS clusters. You can configure scheduled backup for cluster state and application data (persistent volumes - CSI driver-based Azure Disks). The solution provides granular control to choose a specific namespace or an entire cluster to back up or restore by storing backups locally in a blob container and as disk snapshots. With AKS backup, you can unlock end-to-end scenarios - operational recovery, cloning developer/test environments, or cluster upgrade scenarios. For more details  https://learn.microsoft.com/en-us/azure/backup/azure-kubernetes-service-backup-overview
+b. Azure Kubernetes Service Backup -  It is a simple, cloud-native process to back up and restore the containerized applications and data running in AKS clusters. You can configure scheduled backup for cluster state and application data (persistent volumes - CSI driver-based Azure Disks). The solution provides granular control to choose a specific namespace or an entire cluster to back up or restore by storing backups locally in a blob container and as disk snapshots. With AKS backup, you can unlock end-to-end scenarios - operational recovery, cloning developer/test environments, or cluster upgrade scenarios. For more details  https://learn.microsoft.com/en-us/azure/backup/azure-kubernetes-service-backup-overview
 
 #### Additional Considerations
 
@@ -282,7 +282,7 @@ A reference article on the Blue-Green deployment of AKS Clusters can be found he
 **Co-author:** <br />
 Yusuf Rangwala (https://github.com/whereisyusuf) <br /><br />
 
-**Thank you for valuable inputs** <br />
+**Thank you for valuable inputs**: <br />
 Chetan Vaja (https://github.com/chetanv-code) <br />
 Amruta Deshpande (https://github.com/amruta53) <br /><br />
 
